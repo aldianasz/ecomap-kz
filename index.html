@@ -9,8 +9,12 @@
     <!-- Стили Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        #map { height: 100%; }
-        
+        /* Убираем внутренние скроллы, страница будет прокручиваться естественно */
+        html, body {
+            height: auto;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
         /* Анимация сканирования ИИ */
         @keyframes scan {
             0% { top: 0%; }
@@ -22,11 +26,11 @@
         }
     </style>
 </head>
-<body class="bg-slate-900 text-white font-sans overflow-x-hidden md:overflow-hidden h-screen flex flex-col relative">
+<body class="bg-slate-900 text-white font-sans">
 
     <!-- Шапка сайта -->
-    <header class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-4 md:px-6 shrink-0 z-20">
-        <!-- Логотип теперь кликабельный кнопка -->
+    <header class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-4 md:px-6 sticky top-0 z-[2000]">
+        <!-- Кнопка вызова меню-шторки -->
         <button id="logoBtn" class="flex items-center gap-2 hover:opacity-80 transition-opacity focus:outline-none">
             <span class="text-xl md:text-2xl">🌍</span>
             <h1 class="text-lg md:text-xl font-bold tracking-wider text-emerald-400">EcoMap KZ</h1>
@@ -39,129 +43,146 @@
         </div>
     </header>
 
-    <!-- Основной контейнер с картой и формой -->
-    <div id="mainContent" class="flex flex-col md:flex-row flex-1 min-h-0 relative">
-        
-        <!-- Карта -->
-        <main id="map" class="w-full h-[55vh] md:h-auto md:flex-1 order-1 md:order-2 z-0"></main>
-
-        <!-- Боковая панель -->
-        <aside class="w-full md:w-96 bg-slate-800/95 border-t md:border-t-0 md:border-r border-slate-700 p-4 md:p-6 flex flex-col gap-5 overflow-y-auto order-2 md:order-1 shrink-0 z-[1000] shadow-2xl">
-            <div>
-                <h2 class="text-base md:text-lg font-semibold mb-1 text-emerald-300">Сообщить о проблеме</h2>
-                <p class="text-xs text-slate-400">Нажмите на карту выше, чтобы выбрать место, загрузите фото и отправьте.</p>
-            </div>
-
-            <!-- Форма отправки -->
-            <form id="ecoForm" class="flex flex-col gap-4">
-                <div>
-                    <label class="block text-[10px] font-semibold text-slate-400 uppercase mb-1.5">Категория</label>
-                    <select id="category" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 text-sm">
-                        <option value="🗑 Незаконная свалка">🗑 Незаконная свалка</option>
-                        <option value="🌊 Загрязнение водоёма">🌊 Загрязнение водоёма</option>
-                        <option value="🌳 Вырубка деревьев">🌳 Вырубка деревьев</option>
-                        <option value="🌫 Плохой воздух">🌫 Плохой воздух</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-semibold text-slate-400 uppercase mb-1.5">Описание проблемы</label>
-                    <textarea id="description" rows="2" placeholder="Опишите детали..." class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 text-xs" required></textarea>
-                </div>
-
-                <!-- Загрузка фото -->
-                <div>
-                    <label class="block text-[10px] font-semibold text-slate-400 uppercase mb-1.5">Фотография</label>
-                    <label class="flex flex-col items-center justify-center w-full h-16 border-2 border-slate-600 border-dashed rounded-lg cursor-pointer bg-slate-750 hover:bg-slate-700 hover:border-emerald-500 transition-colors">
-                        <div class="flex flex-col items-center justify-center py-2">
-                            <span class="text-lg mb-0.5">📸</span>
-                            <p class="text-[11px] text-slate-400" id="uploadText">Загрузить фото</p>
-                        </div>
-                        <input type="file" id="photoInput" accept="image/*" class="hidden" required />
-                    </label>
-                    
-                    <!-- Визуальный контейнер ИИ анализа -->
-                    <div id="previewContainer" class="hidden mt-3 relative overflow-hidden rounded-lg border border-slate-600">
-                        <img id="imagePreview" src="" class="w-full h-28 object-cover" />
-                        <div id="aiScanner" class="absolute left-0 right-0 h-1 bg-emerald-400 shadow-[0_0_10px_#34d399] scanner-line"></div>
-                        <div class="absolute inset-0 bg-slate-900/60 flex items-center justify-center" id="aiStatusBg">
-                            <span class="text-[11px] font-bold px-2 py-1 rounded" id="aiStatusText">ИИ анализирует... 🤖</span>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" id="submitBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-lg text-sm transition-colors shadow-lg shadow-emerald-500/20">
-                    Отправить обращение
-                </button>
-            </form>
-
-            <hr class="border-slate-700" />
-
-            <!-- Динамический рейтинг районов -->
-            <div>
-                <h3 class="text-xs font-semibold text-slate-400 uppercase mb-2.5">Рейтинг районов (EcoScore)</h3>
-                <div class="space-y-1.5 text-xs" id="scoreTable">
-                    <div class="flex justify-between items-center bg-slate-750 p-2 rounded border border-slate-700/50" id="district-medeu">
-                        <span>Медеуский</span>
-                        <span class="font-bold text-emerald-400 score-val">91</span>
-                    </div>
-                    <div class="flex justify-between items-center bg-slate-750 p-2 rounded border border-slate-700/50" id="district-bostandyk">
-                        <span>Бостандыкский</span>
-                        <span class="font-bold text-yellow-400 score-val">85</span>
-                    </div>
-                    <div class="flex justify-between items-center bg-slate-750 p-2 rounded border border-slate-700/50" id="district-almaly">
-                        <span>Алмалинский</span>
-                        <span class="font-bold text-orange-400 score-val">79</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <!-- ПОЛНОЭКРАННОЕ ИНТЕРАКТИВНОЕ МЕНЮ (По умолчанию скрыто) -->
-    <div id="navigationMenu" class="hidden absolute inset-0 top-16 bg-slate-900/98 z-[9999] flex flex-col md:flex-row p-6 gap-8 overflow-y-auto">
-        <!-- Левая часть: Кнопки навигации с иконками -->
-        <div class="w-full md:w-80 flex flex-col gap-3 shrink-0">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Навигация</h3>
-            
-            <button id="navReportBtn" class="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-emerald-500/50 p-4 rounded-xl text-left transition-all group">
-                <span class="text-2xl group-hover:scale-110 transition-transform">🗺</span>
-                <div>
-                    <div class="font-bold text-sm text-slate-200 group-hover:text-emerald-400 transition-colors">Подать жалобу</div>
-                    <div class="text-[11px] text-slate-400">Карта и форма отправки обращений</div>
-                </div>
-            </button>
-
-            <button id="navAboutBtn" class="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-emerald-500/50 p-4 rounded-xl text-left transition-all group">
-                <span class="text-2xl group-hover:scale-110 transition-transform">👥</span>
-                <div>
-                    <div class="font-bold text-sm text-slate-200 group-hover:text-emerald-400 transition-colors">Кто мы?</div>
-                    <div class="text-[11px] text-slate-400">Миссия, цели и идея проекта</div>
-                </div>
-            </button>
+    <!-- ВЫЕЗЖАЮЩЕЕ БОКОВОЕ МЕНЮ (DRAWER) -->
+    <!-- Затемнение фона -->
+    <div id="drawerOverlay" class="fixed inset-0 bg-slate-950/80 z-[9998] transition-opacity duration-300 opacity-0 pointer-events-none"></div>
+    
+    <!-- Сама шторка меню -->
+    <div id="sideDrawer" class="fixed top-0 left-0 h-full w-[80%] md:w-[380px] bg-slate-900 border-r border-slate-800 z-[9999] shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-6">
+        <!-- Кнопка закрытия меню -->
+        <div class="flex items-center justify-between mb-8">
+            <span class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                <span>🌍</span> EcoMap KZ
+            </span>
+            <button id="closeDrawerBtn" class="text-2xl text-slate-400 hover:text-white focus:outline-none">&times;</button>
         </div>
 
-        <!-- Правая часть: Контентный блок -->
-        <div class="flex-1 bg-slate-800/50 border border-slate-750 rounded-2xl p-6 md:p-8">
-            <!-- Блок "Кто мы" (показывается по умолчанию при переходе на эту вкладку) -->
-            <div id="aboutContent" class="max-w-2xl prose prose-invert">
-                <h2 class="text-2xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
-                    <span>👥</span> Кто мы?
-                </h2>
-                <div class="text-slate-300 space-y-4 text-sm md:text-base leading-relaxed">
-                    <p>
-                        <strong>EcoMap KZ</strong> — это команда людей, которым небезразлично будущее окружающей среды Казахстана. Мы объединены одной целью — сделать нашу страну чище, безопаснее и экологичнее.
-                    </p>
-                    <p>
-                        Мы создали EcoMap KZ для борьбы с загрязнением окружающей среды. Наша платформа помогает жителям быстро сообщать о незаконных свалках, загрязнении водоемов, мусоре и других экологических проблемах, чтобы вместе находить решения и привлекать внимание общества и ответственных организаций.
-                    </p>
-                    <p>
-                        Мы верим, что даже одно сообщение может стать первым шагом к большим изменениям. Именно поэтому наша миссия — объединить людей, технологии и экологическую ответственность в одном удобном сервисе.
-                    </p>
-                    <p class="pt-2 font-semibold text-emerald-300 border-t border-slate-700/50 italic text-right">
-                        EcoMap KZ — вместе за чистый Казахстан.
-                    </p>
+        <nav class="flex flex-col gap-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Разделы</span>
+            
+            <!-- Пункт: Подать жалобу -->
+            <button id="menuReportBtn" class="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-750 border border-slate-700/50 p-3.5 rounded-xl text-left transition-colors group">
+                <span class="text-xl group-hover:scale-110 transition-transform">🗺</span>
+                <div>
+                    <div class="font-semibold text-sm text-slate-200">Подать жалобу</div>
+                    <div class="text-[10px] text-slate-400">Карта и форма отправки</div>
                 </div>
+            </button>
+
+            <!-- Пункт: Кто мы? -->
+            <button id="menuAboutBtn" class="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-750 border border-slate-700/50 p-3.5 rounded-xl text-left transition-colors group">
+                <span class="text-xl group-hover:scale-110 transition-transform">👥</span>
+                <div>
+                    <div class="font-semibold text-sm text-slate-200">Кто мы?</div>
+                    <div class="text-[10px] text-slate-400">О проекте и нашей миссии</div>
+                </div>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ (ГЛАВНЫЙ ЭКРАН) -->
+    <div id="mainSection" class="flex flex-col w-full min-h-screen">
+        <!-- Карта (Сделана значительно больше: 60% высоты на мобильном) -->
+        <div class="w-full h-[60vh] md:h-[65vh] relative z-10">
+            <main id="map" class="w-full h-full"></main>
+        </div>
+
+        <!-- Боковая панель теперь идет сразу под картой и скроллится естественно вниз -->
+        <div class="w-full max-w-4xl mx-auto px-4 py-6 md:py-8 flex flex-col md:flex-row gap-6">
+            
+            <!-- Форма отправки (Сделана компактнее) -->
+            <div class="flex-1 bg-slate-800/80 border border-slate-700 p-5 rounded-2xl shadow-xl">
+                <div class="mb-4">
+                    <h2 class="text-lg font-semibold text-emerald-300">Сообщить о проблеме</h2>
+                    <p class="text-xs text-slate-400">Кликните на карту выше, чтобы выбрать точку загрязнения.</p>
+                </div>
+
+                <form id="ecoForm" class="flex flex-col gap-3">
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-400 uppercase mb-1">Категория</label>
+                        <select id="category" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500 text-xs">
+                            <option value="🗑 Незаконная свалка">🗑 Незаконная свалка</option>
+                            <option value="🌊 Загрязнение водоёма">🌊 Загрязнение водоёма</option>
+                            <option value="🌳 Вырубка деревьев">🌳 Вырубка деревьев</option>
+                            <option value="🌫 Плохой воздух">🌫 Плохой воздух</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-400 uppercase mb-1">Описание проблемы</label>
+                        <textarea id="description" rows="2" placeholder="Кратко опишите проблему..." class="w-full bg-slate-700 border border-slate-600 rounded-lg px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500 text-xs" required></textarea>
+                    </div>
+
+                    <!-- Фотография -->
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-400 uppercase mb-1">Фотография</label>
+                        <label class="flex flex-col items-center justify-center w-full h-14 border border-slate-600 border-dashed rounded-lg cursor-pointer bg-slate-750 hover:bg-slate-700 hover:border-emerald-500 transition-colors">
+                            <div class="flex flex-col items-center justify-center py-1.5">
+                                <span class="text-base mb-0.5">📸</span>
+                                <p class="text-[10px] text-slate-400" id="uploadText">Выбрать фото</p>
+                            </div>
+                            <input type="file" id="photoInput" accept="image/*" class="hidden" required />
+                        </label>
+                        
+                        <!-- Превью с анимацией ИИ -->
+                        <div id="previewContainer" class="hidden mt-2 relative overflow-hidden rounded-lg border border-slate-600">
+                            <img id="imagePreview" src="" class="w-full h-24 object-cover" />
+                            <div id="aiScanner" class="absolute left-0 right-0 h-1 bg-emerald-400 shadow-[0_0_10px_#34d399] scanner-line"></div>
+                            <div class="absolute inset-0 bg-slate-900/60 flex items-center justify-center" id="aiStatusBg">
+                                <span class="text-[10px] font-bold px-2 py-1 rounded" id="aiStatusText">ИИ анализирует... 🤖</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition-colors shadow-lg shadow-emerald-500/20">
+                        Отправить обращение
+                    </button>
+                </form>
+            </div>
+
+            <!-- Рейтинг районов (Справа на ПК, Снизу на мобильном) -->
+            <div class="w-full md:w-80 bg-slate-800/80 border border-slate-700 p-5 rounded-2xl shadow-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase mb-3">Рейтинг районов (EcoScore)</h3>
+                    <div class="space-y-2 text-xs" id="scoreTable">
+                        <div class="flex justify-between items-center bg-slate-750 p-2.5 rounded border border-slate-700/50" id="district-medeu">
+                            <span>Медеуский</span>
+                            <span class="font-bold text-emerald-400 score-val">91</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-750 p-2.5 rounded border border-slate-700/50" id="district-bostandyk">
+                            <span>Бостандыкский</span>
+                            <span class="font-bold text-yellow-400 score-val">85</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-750 p-2.5 rounded border border-slate-700/50" id="district-almaly">
+                            <span>Алмалинский</span>
+                            <span class="font-bold text-orange-400 score-val">79</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- СТРАНИЦА "КТО МЫ" (По умолчанию скрыта) -->
+    <div id="aboutSection" class="hidden w-full max-w-3xl mx-auto px-4 py-8 md:py-12 flex-1 min-h-[calc(100vh-64px)]">
+        <div class="bg-slate-800/60 border border-slate-750 rounded-2xl p-6 md:p-8 shadow-2xl">
+            <h2 class="text-2xl md:text-3xl font-bold text-emerald-400 mb-6 flex items-center gap-2">
+                <span>👥</span> Кто мы?
+            </h2>
+            <div class="text-slate-300 space-y-5 text-sm md:text-base leading-relaxed">
+                <p>
+                    <strong>EcoMap KZ</strong> — это команда людей, которым небезразлично будущее окружающей среды Казахстана. Мы объединены одной целью — сделать нашу страну чище, безопаснее и экологичнее.
+                </p>
+                <p>
+                    Мы создали EcoMap KZ для борьбы с загрязнением окружающей среды. Наша платформа помогает жителям быстро сообщать о незаконных свалках, загрязнении водоемов, мусоре и других экологических проблемах, чтобы вместе находить решения и привлекать внимание общества и ответственных организаций.
+                </p>
+                <p>
+                    Мы верим, что даже одно сообщение может стать первым шагом к большим изменениям. Именно поэтому наша миссия — объединить людей, технологии и экологическую ответственность в одном удобном сервисе.
+                </p>
+                <p class="pt-4 font-semibold text-emerald-300 border-t border-slate-700/50 italic text-right">
+                    EcoMap KZ — вместе за чистый Казахстан.
+                </p>
             </div>
         </div>
     </div>
@@ -169,43 +190,49 @@
     <!-- Скрипты Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // ЛОГИКА НАВИГАЦИОННОГО МЕНЮ
+        // ЛОГИКА ВЫЕЗЖАЮЩЕГО МЕНЮ (DRAWER)
         const logoBtn = document.getElementById('logoBtn');
-        const navigationMenu = document.getElementById('navigationMenu');
-        const mainContent = document.getElementById('mainContent');
-        const navReportBtn = document.getElementById('navReportBtn');
-        const navAboutBtn = document.getElementById('navAboutBtn');
-        const aboutContent = document.getElementById('aboutContent');
+        const sideDrawer = document.getElementById('sideDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+        const menuReportBtn = document.getElementById('menuReportBtn');
+        const menuAboutBtn = document.getElementById('menuAboutBtn');
 
-        // Открытие/закрытие меню при клике на логотип
-        logoBtn.addEventListener('click', () => {
-            if (navigationMenu.classList.contains('hidden')) {
-                navigationMenu.classList.remove('hidden');
-                // Делаем активной вкладку "Кто мы?" по умолчанию при входе
-                selectMenuTab('about');
-            } else {
-                navigationMenu.classList.add('hidden');
-            }
-        });
+        const mainSection = document.getElementById('mainSection');
+        const aboutSection = document.getElementById('aboutSection');
 
-        // Клик по кнопке "Подать жалобу" в меню
-        navReportBtn.addEventListener('click', () => {
-            navigationMenu.classList.add('hidden'); // Просто закрываем меню, возвращая к карте
-        });
-
-        // Клик по кнопке "Кто мы?" в меню
-        navAboutBtn.addEventListener('click', () => {
-            selectMenuTab('about');
-        });
-
-        // Вспомогательная функция переключения контента в меню
-        function selectMenuTab(tab) {
-            if (tab === 'about') {
-                aboutContent.classList.remove('hidden');
-                navAboutBtn.classList.add('border-emerald-500', 'bg-slate-750');
-                navReportBtn.classList.remove('border-emerald-500', 'bg-slate-750');
-            }
+        // Открыть боковое меню
+        function openDrawer() {
+            sideDrawer.classList.remove('-translate-x-full');
+            drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
         }
+
+        // Закрыть боковое меню
+        function closeDrawer() {
+            sideDrawer.classList.add('-translate-x-full');
+            drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        logoBtn.addEventListener('click', openDrawer);
+        closeDrawerBtn.addEventListener('click', closeDrawer);
+        drawerOverlay.addEventListener('click', closeDrawer);
+
+        // Переключение на "Подать жалобу"
+        menuReportBtn.addEventListener('click', () => {
+            aboutSection.classList.add('hidden');
+            mainSection.classList.remove('hidden');
+            closeDrawer();
+            // Возвращаем фокус наверх страницы
+            window.scrollTo(0, 0);
+        });
+
+        // Переключение на "Кто мы?"
+        menuAboutBtn.addEventListener('click', () => {
+            mainSection.classList.add('hidden');
+            aboutSection.classList.remove('hidden');
+            closeDrawer();
+            window.scrollTo(0, 0);
+        });
 
         // --- ДАЛЬШЕ ИДЕТ ЛОГИКА КАРТЫ И ИИ (БЕЗ ИЗМЕНЕНИЙ) ---
         const districtScores = { medeu: 91, bostandyk: 85, almaly: 79 };
