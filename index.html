@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoMap KZ — Экологическая карта с ИИ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Стили Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: calc(100vh - 64px); }
+        /* Анимация сканирования ИИ */
+        @keyframes scan {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+        .scanner-line {
+            animation: scan 2s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans overflow-hidden">
+
+    <!-- Шапка сайта -->
+    <header class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6 z-10 relative">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl">🌍</span>
+            <h1 class="text-xl font-bold tracking-wider text-emerald-400">EcoMap KZ</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-sm border border-emerald-500/20">
+                AI Moderation Active 🤖
+            </span>
+        </div>
+    </header>
+
+    <!-- Основной контейнер -->
+    <div class="flex h-[calc(100vh-64px)] relative">
+        
+        <!-- Боковая панель -->
+        <aside class="w-96 bg-slate-800/95 border-r border-slate-700 p-6 flex flex-col gap-6 overflow-y-auto z-[1000] shadow-2xl">
+            <div>
+                <h2 class="text-lg font-semibold mb-2 text-emerald-300">Сообщить о проблеме</h2>
+                <p class="text-sm text-slate-400">Выберите место на карте, загрузите фото, и ИИ проверит его на подлинность.</p>
+            </div>
+
+            <!-- Форма отправки -->
+            <form id="ecoForm" class="flex flex-col gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Категория</label>
+                    <select id="category" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                        <option value="🗑 Незаконная свалка">🗑 Незаконная свалка</option>
+                        <option value="🌊 Загрязнение водоёма">🌊 Загрязнение водоёма</option>
+                        <option value="🌳 Вырубка деревьев">🌳 Вырубка деревьев</option>
+                        <option value="🌫 Плохой воздух">🌫 Плохой воздух</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Описание проблемы</label>
+                    <textarea id="description" rows="2" placeholder="Опишите детали..." class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 text-sm" required></textarea>
+                </div>
+
+                <!-- Загрузка фото -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Фотография</label>
+                    <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-slate-600 border-dashed rounded-lg cursor-pointer bg-slate-750 hover:bg-slate-700 hover:border-emerald-500 transition-colors">
+                        <div class="flex flex-col items-center justify-center pt-3 pb-3">
+                            <span class="text-xl mb-1">📸</span>
+                            <p class="text-xs text-slate-400" id="uploadText">Загрузить фото</p>
+                        </div>
+                        <input type="file" id="photoInput" accept="image/*" class="hidden" required />
+                    </label>
+                    
+                    <!-- Визуальный контейнер ИИ анализа -->
+                    <div id="previewContainer" class="hidden mt-3 relative overflow-hidden rounded-lg border border-slate-600">
+                        <img id="imagePreview" src="" class="w-full h-32 object-cover" />
+                        <!-- Лазерная линия сканирования ИИ -->
+                        <div id="aiScanner" class="absolute left-0 right-0 h-1 bg-emerald-400 shadow-[0_0_10px_#34d399] scanner-line"></div>
+                        <div class="absolute inset-0 bg-slate-900/60 flex items-center justify-center" id="aiStatusBg">
+                            <span class="text-xs font-bold px-2 py-1 rounded" id="aiStatusText">ИИ анализирует... 🤖</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 rounded-lg transition-colors shadow-lg shadow-emerald-500/20">
+                    Отправить обращение
+                </button>
+            </form>
+
+            <hr class="border-slate-700" />
+
+            <!-- Динамический рейтинг районов -->
+            <div>
+                <h3 class="text-sm font-semibold text-slate-400 uppercase mb-3">Рейтинг районов (EcoScore)</h3>
+                <div class="space-y-2 text-sm" id="scoreTable">
+                    <div class="flex justify-between items-center bg-slate-750 p-2 rounded border border-slate-700/50" id="district-medeu">
+                        <span>Медеуский</span>
+                        <span class="font-bold text-emerald-400 score-val">91</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-750 p-2 rounded border border-slate-700/50" id="district-bostandyk">
+                        <span>Бостандыкский</span>
+                        <span class="font-bold text-yellow-400 score-val">85</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-slate-750 p-2 rounded border border-slate-700/50" id="district-almaly">
+                        <span>Алмалинский</span>
+                        <span class="font-bold text-orange-400 score-val">79</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-2">* Каждая новая подтвержденная жалоба снижает EcoScore района на 2 балла.</p>
+            </div>
+        </aside>
+
+        <!-- Карта -->
+        <main id="map" class="flex-1 z-0"></main>
+    </div>
+
+    <!-- Скрипты Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // База данных рейтинга районов в памяти сайта
+        const districtScores = {
+            medeu: 91,
+            bostandyk: 85,
+            almaly: 79
+        };
+
+        // Координатные границы (приблизительные) для автоматического определения района
+        // Медеуский - восток, Бостандыкский - юг/центр, Алмалинский - север/запад
+        function detectDistrict(lat, lng) {
+            if (lng > 76.95) return 'medeu';
+            if (lat < 43.23) return 'bostandyk';
+            return 'almaly';
+        }
+
+        // Функция обновления таблицы рейтингов на экране
+        function updateScoreboard() {
+            document.querySelector('#district-medeu .score-val').innerText = districtScores.medeu;
+            document.querySelector('#district-bostandyk .score-val').innerText = districtScores.bostandyk;
+            document.querySelector('#district-almaly .score-val').innerText = districtScores.almaly;
+
+            // Динамический цвет в зависимости от баллов
+            ['medeu', 'bostandyk', 'almaly'].forEach(id => {
+                const el = document.querySelector(`#district-${id} .score-val`);
+                const score = districtScores[id];
+                el.className = "font-bold score-val"; // сброс
+                if (score >= 85) el.classList.add('text-emerald-400');
+                else if (score >= 75) el.classList.add('text-yellow-400');
+                else el.classList.add('text-rose-400');
+            });
+        }
+
+        // Инициализация карты
+        const map = L.map('map').setView([43.238949, 76.945408], 12);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OSM & CARTO'
+        }).addTo(map);
+
+        // Функция рендера маркера
+        function addMarker(report) {
+            const marker = L.marker(report.coords).addTo(map);
+            const imgHtml = report.photoUrl 
+                ? `<img src="${report.photoUrl}" class="w-full h-24 object-cover rounded-lg my-2 border border-slate-200" />` 
+                : '';
+
+            const popupContent = `
+                <div class="text-slate-900 font-sans p-1 w-52">
+                    <h3 class="font-bold text-sm mb-1">${report.category}</h3>
+                    <p class="text-xs text-slate-600 mb-1">${report.desc}</p>
+                    ${imgHtml}
+                    <div class="flex flex-col gap-1 mt-1">
+                        <span class="inline-block bg-slate-200 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded w-max">
+                            Статус: ${report.status}
+                        </span>
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-[9px] font-semibold px-2 py-0.5 rounded w-max">
+                            🤖 Проверено ИИ: Да
+                        </span>
+                    </div>
+                </div>
+            `;
+            marker.bindPopup(popupContent);
+        }
+
+        // Обработка загрузки картинки и симуляция ИИ анализа
+        const photoInput = document.getElementById('photoInput');
+        const uploadText = document.getElementById('uploadText');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const aiScanner = document.getElementById('aiScanner');
+        const aiStatusBg = document.getElementById('aiStatusBg');
+        const aiStatusText = document.getElementById('aiStatusText');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        let selectedPhotoUrl = null;
+        let isAiVerified = false;
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                selectedPhotoUrl = URL.createObjectURL(file);
+                imagePreview.src = selectedPhotoUrl;
+                
+                // Включаем анимацию сканирования ИИ
+                previewContainer.classList.remove('hidden');
+                aiScanner.classList.remove('hidden');
+                aiStatusBg.className = "absolute inset-0 bg-slate-900/60 flex items-center justify-center";
+                aiStatusText.innerText = "ИИ анализирует фото... 🤖";
+                aiStatusText.className = "text-xs font-bold px-2 py-1 rounded bg-slate-800 text-amber-400";
+                submitBtn.disabled = true; // Блокируем кнопку отправки на время анализа
+                submitBtn.innerText = "ИИ проверяет фото...";
+
+                // Имитируем задержку на "думание" нейросети (1.8 секунды)
+                setTimeout(() => {
+                    // ИИ алгоритм (для презентации сделаем так, чтобы он всегда одобрял реальные фото, 
+                    // но если описание слишком короткое или подозрительное, можно сымитировать отказ)
+                    isAiVerified = true; 
+                    
+                    aiScanner.classList.add('hidden'); // выключаем лазерную линию
+                    aiStatusBg.className = "absolute top-2 left-2 flex items-center justify-center"; // смещаем плашку в угол
+                    aiStatusText.innerText = "✔ Проверено ИИ";
+                    aiStatusText.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500 text-slate-950";
+                    
+                    uploadText.innerText = "Проверка пройдена!";
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Отправить обращение";
+                }, 1800);
+            }
+        });
+
+        // Работа с картой и координатами
+        let tempCoords = null;
+        let tempMarker = null;
+
+        map.on('click', function(e) {
+            tempCoords = [e.latlng.lat, e.latlng.lng];
+            if (tempMarker) map.removeLayer(tempMarker);
+            tempMarker = L.marker(tempCoords, {opacity: 0.6}).addTo(map);
+        });
+
+        // Отправка формы
+        document.getElementById('ecoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('description').value;
+
+            if (!tempCoords) {
+                alert("Пожалуйста, выберите точку на карте!");
+                return;
+            }
+
+            if (!isAiVerified) {
+                alert("Пожалуйста, дождитесь окончания проверки ИИ!");
+                return;
+            }
+
+            // 1. Создаем и ставим маркер на карту
+            const newReport = {
+                coords: tempCoords,
+                category: category,
+                desc: description,
+                status: "🟡 Получено",
+                photoUrl: selectedPhotoUrl
+            };
+            addMarker(newReport);
+
+            // 2. ДИНАМИЧЕСКИЙ РАСЧЕТ РЕЙТИНГА
+            // Определяем, в какой район упала точка
+            const targetDistrict = detectDistrict(tempCoords[0], tempCoords[1]);
+            
+            // Понижаем рейтинг этого района на 2 балла (так как появилась новая проблема)
+            if (districtScores[targetDistrict] > 0) {
+                districtScores[targetDistrict] -= 2;
+                updateScoreboard(); // Обновляем таблицу на экране
+            }
+
+            // Очистка полей формы
+            if (tempMarker) map.removeLayer(tempMarker);
+            document.getElementById('ecoForm').reset();
+            previewContainer.classList.add('hidden');
+            uploadText.innerText = "Загрузить фото";
+            tempCoords = null;
+            selectedPhotoUrl = null;
+            isAiVerified = false;
+
+            // Красивое уведомление о том, в каком районе упал рейтинг
+            const districtNames = { medeu: "Медеуский", bostandyk: "Бостандыкский", almaly: "Алмалинский" };
+            alert(`Успешно! Жалоба добавлена. EcoScore района ${districtNames[targetDistrict]} понижен из-за новой экологической проблемы.`);
+        });
+    </script>
+</body>
+</html>
