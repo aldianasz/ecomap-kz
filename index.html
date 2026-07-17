@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EcoMap KZ — Экологическая карта с геймификацией</title>
+    <title>EcoMap KZ — Экологическая карта Казахстана</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Стили Leaflet -->
@@ -16,6 +16,13 @@
             overflow-y: auto;
             scroll-behavior: smooth;
             background-color: #f8fafc;
+        }
+        /* Принудительная высота карты, чтобы избежать схлопывания в 0px */
+        #map {
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            display: block;
         }
         .fade-in {
             animation: fadeIn 0.5s ease-out forwards;
@@ -42,7 +49,6 @@
         .leaflet-popup-tip {
             background: rgba(255, 255, 255, 0.9);
         }
-        /* Анимация пульсации для нового звания */
         @keyframes celebrate {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -54,7 +60,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased relative">
 
-    <!-- ШАБЛОН ПОЗДРАВЛЕНИЯ С НОВЫМ ЗВАНИЕМ (LEVEL UP MODAL) -->
+    <!-- ШАБЛОН ПОЗДРАВЛЕНИЯ С НОВЫМ ЗВАНИЕМ -->
     <div id="levelUpModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[99999] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
         <div class="bg-white rounded-3xl p-8 max-w-sm w-full border border-slate-100 shadow-2xl text-center transform scale-95 transition-transform duration-300">
             <span class="text-6xl inline-block celebrate-animation mb-4" id="modalBadge">🌱</span>
@@ -278,7 +284,6 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <h2 class="text-xl font-extrabold text-slate-800" id="profileNickname">@username</h2>
-                            <!-- Бейдж звания в профиле -->
                             <span id="profileRankBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-1">
                                 🌱 Эко-новичок
                             </span>
@@ -291,42 +296,37 @@
                 </button>
             </div>
 
-            <!-- СЕКЦИЯ ГЕЙМИФИКАЦИИ (Уровни и Шкала прогресса) -->
+            <!-- СЕКЦИЯ ГЕЙМИФИКАЦИИ -->
             <div class="bg-slate-50 border border-slate-100 rounded-2xl p-5 md:p-6">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Прогресс звания</span>
                     <span class="text-xs font-extrabold text-emerald-600" id="reportsCountText">0 жалоб отправлено</span>
                 </div>
-                <!-- Шкала прогресса -->
                 <div class="w-full h-3.5 bg-slate-200 rounded-full overflow-hidden shadow-inner mb-3">
                     <div id="progressFill" class="h-full bg-emerald-500 transition-all duration-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]" style="width: 0%"></div>
                 </div>
                 <p id="nextRankProgressText" class="text-xs text-slate-500 font-medium">До звания "Эко-волонтёр" осталось отправить 1 жалобу.</p>
             </div>
 
-            <!-- КОЛЛЕКЦИЯ ДОСТИЖЕНИЙ (БЕЙДЖИ) -->
+            <!-- КОЛЛЕКЦИЯ ДОСТИЖЕНИЙ -->
             <div>
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Коллекция экологических достижений</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <!-- Достижение 1 -->
                     <div id="badge-first" class="bg-white border border-slate-100 rounded-2xl p-4 text-center flex flex-col items-center shadow-sm opacity-40 transition-all">
                         <span class="text-3xl mb-2">⚡</span>
                         <h4 class="font-bold text-xs text-slate-700">Быстрый старт</h4>
                         <p class="text-[9px] text-slate-400 mt-1">Первая жалоба</p>
                     </div>
-                    <!-- Достижение 2 -->
                     <div id="badge-five" class="bg-white border border-slate-100 rounded-2xl p-4 text-center flex flex-col items-center shadow-sm opacity-40 transition-all">
                         <span class="text-3xl mb-2">🎯</span>
                         <h4 class="font-bold text-xs text-slate-700">Пятерочка</h4>
                         <p class="text-[9px] text-slate-400 mt-1">5 жалоб</p>
                     </div>
-                    <!-- Достижение 3 -->
                     <div id="badge-ten" class="bg-white border border-slate-100 rounded-2xl p-4 text-center flex flex-col items-center shadow-sm opacity-40 transition-all">
                         <span class="text-3xl mb-2">🔥</span>
                         <h4 class="font-bold text-xs text-slate-700">Эко-марафон</h4>
                         <p class="text-[9px] text-slate-400 mt-1">10 жалоб</p>
                     </div>
-                    <!-- Достижение 4 -->
                     <div id="badge-fifteen" class="bg-white border border-slate-100 rounded-2xl p-4 text-center flex flex-col items-center shadow-sm opacity-40 transition-all">
                         <span class="text-3xl mb-2">🛡️</span>
                         <h4 class="font-bold text-xs text-slate-700">Страж Алматы</h4>
@@ -338,12 +338,10 @@
             <!-- Список жалоб пользователя -->
             <div>
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Мои отправленные жалобы</h3>
-                
                 <div id="noReportsMessage" class="hidden py-12 text-center border border-dashed border-slate-200 rounded-xl bg-slate-50">
                     <span class="text-3xl">🌱</span>
                     <p class="text-xs text-slate-500 mt-2 font-medium">У вас пока нет отправленных жалоб.</p>
                 </div>
-
                 <div id="userReportsList" class="space-y-3"></div>
             </div>
 
@@ -384,21 +382,31 @@
         </div>
     </div>
 
+    <!-- Загрузка библиотеки Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // --- ИНИЦИАЛИЗАЦИЯ SUPABASE ---
+        // --- БЕЗОПАСНАЯ НАСТРОЙКА И КЛЮЧИ SUPABASE ---
         const SUPABASE_URL = "https://your-project-id.supabase.co"; 
         const SUPABASE_ANON_KEY = "your-anon-key";
         
-        let supabase = null;
-        if (SUPABASE_URL !== "https://your-project-id.supabase.co") {
-            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabaseClient = null;
+        
+        // Обертываем в try-catch, чтобы не поломать сайт в случае сбоя сети или блокировки CDN
+        try {
+            if (typeof supabase !== 'undefined' && SUPABASE_URL !== "https://your-project-id.supabase.co" && SUPABASE_URL !== "") {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log("Supabase успешно подключен!");
+            } else {
+                console.log("Supabase не настроен. Запущен локальный демо-режим.");
+            }
+        } catch (error) {
+            console.error("Ошибка инициализации Supabase:", error);
         }
 
         let currentUser = null;
         let localReports = JSON.parse(localStorage.getItem('ecomap_reports')) || [];
 
-        // Звания и их пороги
+        // Пороги званий
         const RANK_TIERS = [
             { name: "🌱 Эко-новичок", min: 0, max: 0, nextRank: "🌿 Эко-волонтёр" },
             { name: "🌿 Эко-волонтёр", min: 1, max: 2, nextRank: "🌳 Эко-активист" },
@@ -407,7 +415,7 @@
             { name: "👑 Эко-лидер", min: 15, max: Infinity, nextRank: null }
         ];
 
-        // UI Элементы геймификации
+        // Кэширование DOM элементов (с проверками)
         const levelUpModal = document.getElementById('levelUpModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const modalBadge = document.getElementById('modalBadge');
@@ -423,11 +431,24 @@
         const badgeTen = document.getElementById('badge-ten');
         const badgeFifteen = document.getElementById('badge-fifteen');
 
+        const logoBtn = document.getElementById('logoBtn');
+        const sideDrawer = document.getElementById('sideDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+        
+        const menuReportBtn = document.getElementById('menuReportBtn');
+        const menuAboutBtn = document.getElementById('menuAboutBtn');
+        const menuRecycleBtn = document.getElementById('menuRecycleBtn');
         const menuAuthBtn = document.getElementById('menuAuthBtn');
         const menuProfileBtn = document.getElementById('menuProfileBtn');
         const menuUsernameText = document.getElementById('menuUsernameText');
+
+        const mainSection = document.getElementById('mainSection');
         const authSection = document.getElementById('authSection');
         const profileSection = document.getElementById('profileSection');
+        const recycleSection = document.getElementById('recycleSection');
+        const aboutSection = document.getElementById('aboutSection');
+
         const nicknameGroup = document.getElementById('nicknameGroup');
         const authForm = document.getElementById('authForm');
         const authTitle = document.getElementById('authTitle');
@@ -444,40 +465,36 @@
         let isSignUpMode = false;
 
         // --- ЛОГИКА ГЕЙМИФИКАЦИИ ---
-
-        // Определение текущего звания по числу жалоб
         function getRank(count) {
             return RANK_TIERS.find(tier => count >= tier.min && count <= tier.max) || RANK_TIERS[RANK_TIERS.length - 1];
         }
 
-        // Обновление интерфейса наград и уровней пользователя
         function updateGamificationUI(reportsCount) {
-            reportsCountText.innerText = `${reportsCount} ${getDeclension(reportsCount, ['жалоба отправлена', 'жалобы отправлено', 'жалоб отправлено'])}`;
+            if (reportsCountText) reportsCountText.innerText = `${reportsCount} ${getDeclension(reportsCount, ['жалоба отправлена', 'жалобы отправлено', 'жалоб отправлено'])}`;
             
             const currentRank = getRank(reportsCount);
-            profileRankBadge.innerText = currentRank.name;
+            if (profileRankBadge) profileRankBadge.innerText = currentRank.name;
 
-            // Расчет шкалы прогресса
             if (currentRank.nextRank) {
                 const nextRankObj = RANK_TIERS.find(t => t.name === currentRank.nextRank);
                 const currentMin = currentRank.min;
                 const nextMin = nextRankObj.min;
                 
-                // Прогресс внутри текущего звания
                 const totalInTier = nextMin - currentMin;
                 const progressInTier = reportsCount - currentMin;
                 const percentage = Math.min((progressInTier / totalInTier) * 100, 100);
 
-                progressFill.style.width = `${percentage}%`;
+                if (progressFill) progressFill.style.width = `${percentage}%`;
                 
                 const remaining = nextMin - reportsCount;
-                nextRankProgressText.innerText = `До звания "${currentRank.nextRank}" осталось отправить ${remaining} ${getDeclension(remaining, ['жалобу', 'жалобы', 'жалоб'])}.`;
+                if (nextRankProgressText) {
+                    nextRankProgressText.innerText = `До звания "${currentRank.nextRank}" осталось отправить ${remaining} ${getDeclension(remaining, ['жалобу', 'жалобы', 'жалоб'])}.`;
+                }
             } else {
-                progressFill.style.width = "100%";
-                nextRankProgressText.innerText = "Поздравляем! Вы достигли максимального звания Эко-лидера! 🎉";
+                if (progressFill) progressFill.style.width = "100%";
+                if (nextRankProgressText) nextRankProgressText.innerText = "Поздравляем! Вы достигли максимального звания Эко-лидера! 🎉";
             }
 
-            // Обновление коллекции достижений (бейджей)
             updateBadgeStatus(badgeFirst, reportsCount >= 1);
             updateBadgeStatus(badgeFive, reportsCount >= 5);
             updateBadgeStatus(badgeTen, reportsCount >= 10);
@@ -485,6 +502,7 @@
         }
 
         function updateBadgeStatus(element, active) {
+            if (!element) return;
             if (active) {
                 element.classList.remove('opacity-40');
                 element.classList.add('border-emerald-200', 'bg-emerald-50/20', 'scale-[1.03]');
@@ -494,45 +512,53 @@
             }
         }
 
-        // Всплывающее поздравление о повышении
         function showLevelUpAlert(newRankName) {
+            if (!levelUpModal) return;
             const emoji = newRankName.split(" ")[0];
-            modalBadge.innerText = emoji;
-            modalRankName.innerText = newRankName;
+            if (modalBadge) modalBadge.innerText = emoji;
+            if (modalRankName) modalRankName.innerText = newRankName;
 
             levelUpModal.classList.remove('hidden');
             setTimeout(() => {
                 levelUpModal.classList.remove('opacity-0', 'pointer-events-none');
-                levelUpModal.querySelector('div').classList.remove('scale-95');
+                const modalDiv = levelUpModal.querySelector('div');
+                if (modalDiv) modalDiv.classList.remove('scale-95');
             }, 10);
         }
 
-        closeModalBtn.addEventListener('click', () => {
-            levelUpModal.classList.add('opacity-0', 'pointer-events-none');
-            levelUpModal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => levelUpModal.classList.add('hidden'), 300);
-        });
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                if (!levelUpModal) return;
+                levelUpModal.classList.add('opacity-0', 'pointer-events-none');
+                const modalDiv = levelUpModal.querySelector('div');
+                if (modalDiv) modalDiv.classList.add('scale-95');
+                setTimeout(() => levelUpModal.classList.add('hidden'), 300);
+            });
+        }
 
-        // Функция склонения числительных в русском языке
         function getDeclension(number, titles) {
             const cases = [2, 0, 1, 1, 1, 2];
             return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
         }
 
-        // --- ЛОГИКА АВТОРИЗАЦИИ И СЕССИЙ ---
-        
+        // --- ЛОГИКА АВТОРИЗАЦИИ ---
         async function checkSession() {
-            if (supabase) {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session) {
-                    setCurrentUser(session.user);
-                } else {
-                    setCurrentUser(null);
+            if (supabaseClient) {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    setCurrentUser(session ? session.user : null);
+                } catch (e) {
+                    console.error("Ошибка сессии Supabase:", e);
+                    loadLocalUser();
                 }
             } else {
-                const mockUser = JSON.parse(localStorage.getItem('ecomap_mock_user'));
-                setCurrentUser(mockUser);
+                loadLocalUser();
             }
+        }
+
+        function loadLocalUser() {
+            const mockUser = JSON.parse(localStorage.getItem('ecomap_mock_user'));
+            setCurrentUser(mockUser);
         }
 
         function setCurrentUser(user) {
@@ -540,115 +566,129 @@
             if (user) {
                 const nickname = user.user_metadata?.nickname || user.nickname || user.email.split('@')[0];
                 
-                menuAuthBtn.classList.add('hidden');
-                menuProfileBtn.classList.remove('hidden');
-                menuUsernameText.innerText = `@${nickname}`;
+                if (menuAuthBtn) menuAuthBtn.classList.add('hidden');
+                if (menuProfileBtn) menuProfileBtn.classList.remove('hidden');
+                if (menuUsernameText) menuUsernameText.innerText = `@${nickname}`;
                 
-                profileNickname.innerText = `@${nickname}`;
-                profileEmail.innerText = user.email;
-                profileAvatar.innerText = nickname.charAt(0).toUpperCase();
+                if (profileNickname) profileNickname.innerText = `@${nickname}`;
+                if (profileEmail) profileEmail.innerText = user.email;
+                if (profileAvatar) profileAvatar.innerText = nickname.charAt(0).toUpperCase();
 
                 renderUserReports();
             } else {
-                menuAuthBtn.classList.remove('hidden');
-                menuProfileBtn.classList.add('hidden');
+                if (menuAuthBtn) menuAuthBtn.classList.remove('hidden');
+                if (menuProfileBtn) menuProfileBtn.classList.add('hidden');
             }
         }
 
-        toggleAuthModeBtn.addEventListener('click', () => {
-            isSignUpMode = !isSignUpMode;
-            if (isSignUpMode) {
-                authTitle.innerText = "Создать аккаунт";
-                authSubtitle.innerText = "Заполните форму, чтобы зарегистрироваться";
-                nicknameGroup.classList.remove('hidden');
-                authSubmitBtn.innerText = "Зарегистрироваться";
-                toggleAuthModeBtn.innerText = "Уже есть аккаунт? Войти";
-            } else {
-                authTitle.innerText = "Войти в аккаунт";
-                authSubtitle.innerText = "Получите доступ к отправке жалоб и личному профилю";
-                nicknameGroup.classList.add('hidden');
-                authSubmitBtn.innerText = "Войти";
-                toggleAuthModeBtn.innerText = "Нет аккаунта? Зарегистрироваться";
-            }
-        });
-
-        authForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value;
-            const nickname = document.getElementById('authNickname').value.trim();
-
-            if (supabase) {
+        if (toggleAuthModeBtn) {
+            toggleAuthModeBtn.addEventListener('click', () => {
+                isSignUpMode = !isSignUpMode;
                 if (isSignUpMode) {
-                    const { error } = await supabase.auth.signUp({
-                        email,
-                        password,
-                        options: { data: { nickname } }
-                    });
-                    if (error) return alert(error.message);
-                    alert("Регистрация успешна! Теперь вы можете войти.");
-                    toggleAuthModeBtn.click();
+                    if (authTitle) authTitle.innerText = "Создать аккаунт";
+                    if (authSubtitle) authSubtitle.innerText = "Заполните форму, чтобы зарегистрироваться";
+                    if (nicknameGroup) nicknameGroup.classList.remove('hidden');
+                    if (authSubmitBtn) authSubmitBtn.innerText = "Зарегистрироваться";
+                    toggleAuthModeBtn.innerText = "Уже есть аккаунт? Войти";
                 } else {
-                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                    if (error) return alert(error.message);
-                    setCurrentUser(data.user);
-                    showScreen('main');
+                    if (authTitle) authTitle.innerText = "Войти в аккаунт";
+                    if (authSubtitle) authSubtitle.innerText = "Получите доступ к отправке жалоб";
+                    if (nicknameGroup) nicknameGroup.classList.add('hidden');
+                    if (authSubmitBtn) authSubmitBtn.innerText = "Войти";
+                    toggleAuthModeBtn.innerText = "Нет аккаунта? Зарегистрироваться";
                 }
-            } else {
-                if (isSignUpMode) {
-                    const mockUser = { email, nickname: nickname || email.split('@')[0], id: "usr_" + Date.now() };
-                    localStorage.setItem('ecomap_mock_user_data', JSON.stringify(mockUser));
-                    localStorage.setItem('ecomap_mock_password', password);
-                    alert("Регистрация успешна (Демо-режим)! Войдите с этими данными.");
-                    toggleAuthModeBtn.click();
+            });
+        }
+
+        if (authForm) {
+            authForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('authEmail').value.trim();
+                const password = document.getElementById('authPassword').value;
+                const nickname = document.getElementById('authNickname') ? document.getElementById('authNickname').value.trim() : "";
+
+                if (supabaseClient) {
+                    try {
+                        if (isSignUpMode) {
+                            const { error } = await supabaseClient.auth.signUp({
+                                email,
+                                password,
+                                options: { data: { nickname } }
+                            });
+                            if (error) return alert(error.message);
+                            alert("Регистрация успешна! Теперь вы можете войти.");
+                            if (toggleAuthModeBtn) toggleAuthModeBtn.click();
+                        } else {
+                            const { data, error } = await supabaseClient.signInWithPassword({ email, password });
+                            if (error) return alert(error.message);
+                            setCurrentUser(data.user);
+                            showScreen('main');
+                        }
+                    } catch (err) {
+                        alert("Ошибка сети при обращении к Supabase");
+                    }
                 } else {
-                    const registeredUser = JSON.parse(localStorage.getItem('ecomap_mock_user_data'));
-                    const registeredPass = localStorage.getItem('ecomap_mock_password');
-                    if (registeredUser && registeredUser.email === email && registeredPass === password) {
-                        localStorage.setItem('ecomap_mock_user', JSON.stringify(registeredUser));
-                        setCurrentUser(registeredUser);
-                        showScreen('main');
+                    // Локальный режим
+                    if (isSignUpMode) {
+                        const mockUser = { email, nickname: nickname || email.split('@')[0], id: "usr_" + Date.now() };
+                        localStorage.setItem('ecomap_mock_user_data', JSON.stringify(mockUser));
+                        localStorage.setItem('ecomap_mock_password', password);
+                        alert("Регистрация успешна (Демо-режим)! Теперь войдите.");
+                        if (toggleAuthModeBtn) toggleAuthModeBtn.click();
                     } else {
-                        alert("Неверный email или пароль!");
+                        const registeredUser = JSON.parse(localStorage.getItem('ecomap_mock_user_data'));
+                        const registeredPass = localStorage.getItem('ecomap_mock_password');
+                        if (registeredUser && registeredUser.email === email && registeredPass === password) {
+                            localStorage.setItem('ecomap_mock_user', JSON.stringify(registeredUser));
+                            setCurrentUser(registeredUser);
+                            showScreen('main');
+                        } else {
+                            alert("Неверный email или пароль!");
+                        }
                     }
                 }
-            }
-            authForm.reset();
-        });
+                authForm.reset();
+            });
+        }
 
-        logoutBtn.addEventListener('click', async () => {
-            if (supabase) {
-                await supabase.auth.signOut();
-            } else {
-                localStorage.removeItem('ecomap_mock_user');
-            }
-            setCurrentUser(null);
-            showScreen('main');
-        });
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                if (supabaseClient) {
+                    await supabaseClient.auth.signOut();
+                } else {
+                    localStorage.removeItem('ecomap_mock_user');
+                }
+                setCurrentUser(null);
+                showScreen('main');
+            });
+        }
 
-        // Получить список жалоб текущего юзера и обновить геймификацию
         async function renderUserReports() {
+            if (!userReportsList) return;
             userReportsList.innerHTML = "";
             let userReports = [];
 
-            if (supabase) {
-                const { data, error } = await supabase
-                    .from('reports')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false });
-                if (!error) userReports = data;
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('reports')
+                        .select('*')
+                        .eq('user_id', currentUser.id)
+                        .order('created_at', { ascending: false });
+                    if (!error && data) userReports = data;
+                } catch (e) {
+                    console.error("Ошибка при получении жалоб из Supabase", e);
+                }
             } else {
                 userReports = localReports.filter(r => r.userId === currentUser.id);
             }
 
-            // Обновляем шкалу уровней и бейджи на основе загруженного количества жалоб
             updateGamificationUI(userReports.length);
 
             if (userReports.length === 0) {
-                noReportsMessage.classList.remove('hidden');
+                if (noReportsMessage) noReportsMessage.classList.remove('hidden');
             } else {
-                noReportsMessage.classList.add('hidden');
+                if (noReportsMessage) noReportsMessage.classList.add('hidden');
                 userReports.forEach(r => {
                     const card = document.createElement('div');
                     card.className = "bg-slate-50 p-4 rounded-xl border border-slate-100 flex justify-between items-center";
@@ -667,7 +707,55 @@
             }
         }
 
-        // --- КАРТА И ДРУГИЕ РАЗДЕЛЫ (БЕЗ ИЗМЕНЕНИЙ) ---
+        // --- ОТРИСОВКА ИНТЕРФЕЙСА И МЕНЮ ---
+        function openDrawer() {
+            if (sideDrawer) sideDrawer.classList.remove('-translate-x-full');
+            if (drawerOverlay) drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeDrawer() {
+            if (sideDrawer) sideDrawer.classList.add('-translate-x-full');
+            if (drawerOverlay) drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        if (logoBtn) logoBtn.addEventListener('click', openDrawer);
+        if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
+        if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
+        function showScreen(screen) {
+            const screens = [mainSection, aboutSection, recycleSection, authSection, profileSection];
+            screens.forEach(s => { if (s) s.classList.add('hidden'); });
+            
+            if (screen === 'main' && mainSection) mainSection.classList.remove('hidden');
+            if (screen === 'about' && aboutSection) aboutSection.classList.remove('hidden');
+            if (screen === 'recycle' && recycleSection) recycleSection.classList.remove('hidden');
+            if (screen === 'auth' && authSection) authSection.classList.remove('hidden');
+            if (screen === 'profile' && profileSection) profileSection.classList.remove('hidden');
+            
+            closeDrawer();
+            window.scrollTo(0, 0);
+        }
+
+        if (menuReportBtn) menuReportBtn.addEventListener('click', () => showScreen('main'));
+        if (menuAboutBtn) menuAboutBtn.addEventListener('click', () => showScreen('about'));
+        if (menuRecycleBtn) menuRecycleBtn.addEventListener('click', () => showScreen('recycle'));
+        if (menuAuthBtn) menuAuthBtn.addEventListener('click', () => showScreen('auth'));
+        if (menuProfileBtn) menuProfileBtn.addEventListener('click', () => showScreen('profile'));
+
+        // --- ИНИЦИАЛИЗАЦИЯ КАРТЫ LEAFLET ---
+        let map = null;
+        try {
+            map = L.map('map', { attributionControl: false }).setView([43.238949, 76.945408], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            console.log("Карта успешно инициализирована!");
+        } catch (e) {
+            console.error("Ошибка при инициализации карты Leaflet:", e);
+        }
+
+        const userReportsGroup = map ? L.layerGroup().addTo(map) : null;
+        const recyclePointsGroup = map ? L.layerGroup().addTo(map) : null;
+        const recycleMarkers = {};
+
         const recyclePoints = [
             { id: 1, name: "ECO-Almaty (Прием вторсырья)", address: "ул. Байтурсынова, 113", lat: 43.2392, lng: 76.9298, types: "Пластик, Бумага, Картон, Алюминий", hours: "09:00 - 18:00 (Пн-Пт)" },
             { id: 2, name: "Пункт сбора батареек и ламп", address: "пр. Абая, 44 (метро)", lat: 43.2412, lng: 76.9192, types: "Батарейки, Мелкие ртутные лампы", hours: "Круглосуточно" },
@@ -675,64 +763,8 @@
             { id: 4, name: "Макулатура Kagazy Recycling", address: "ул. Кабдолова, 1/4", lat: 43.2285, lng: 76.8592, types: "Бумага, Архивные папки, Картон", hours: "09:00 - 17:30" }
         ];
 
-        const logoBtn = document.getElementById('logoBtn');
-        const sideDrawer = document.getElementById('sideDrawer');
-        const drawerOverlay = document.getElementById('drawerOverlay');
-        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
-        
-        const menuReportBtn = document.getElementById('menuReportBtn');
-        const menuAboutBtn = document.getElementById('menuAboutBtn');
-        const menuRecycleBtn = document.getElementById('menuRecycleBtn');
-
-        const recycleSection = document.getElementById('recycleSection');
-        const aboutSection = document.getElementById('aboutSection');
-
-        function openDrawer() {
-            sideDrawer.classList.remove('-translate-x-full');
-            drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
-        }
-
-        function closeDrawer() {
-            sideDrawer.classList.add('-translate-x-full');
-            drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        logoBtn.addEventListener('click', openDrawer);
-        closeDrawerBtn.addEventListener('click', closeDrawer);
-        drawerOverlay.addEventListener('click', closeDrawer);
-
-        function showScreen(screen) {
-            mainSection.classList.add('hidden');
-            aboutSection.classList.add('hidden');
-            recycleSection.classList.add('hidden');
-            authSection.classList.add('hidden');
-            profileSection.classList.add('hidden');
-            
-            if (screen === 'main') mainSection.classList.remove('hidden');
-            if (screen === 'about') aboutSection.classList.remove('hidden');
-            if (screen === 'recycle') recycleSection.classList.remove('hidden');
-            if (screen === 'auth') authSection.classList.remove('hidden');
-            if (screen === 'profile') profileSection.classList.remove('hidden');
-            
-            closeDrawer();
-            window.scrollTo(0, 0);
-        }
-
-        menuReportBtn.addEventListener('click', () => showScreen('main'));
-        menuAboutBtn.addEventListener('click', () => showScreen('about'));
-        menuRecycleBtn.addEventListener('click', () => showScreen('recycle'));
-        menuAuthBtn.addEventListener('click', () => showScreen('auth'));
-        menuProfileBtn.addEventListener('click', () => showScreen('profile'));
-
-        // Карта
-        const map = L.map('map', { attributionControl: false }).setView([43.238949, 76.945408], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-        const userReportsGroup = L.layerGroup().addTo(map);
-        const recyclePointsGroup = L.layerGroup().addTo(map);
-        const recycleMarkers = {};
-
         function renderRecycleOnMap() {
+            if (!map || !recyclePointsGroup) return;
             recyclePoints.forEach(point => {
                 const greenIcon = L.divIcon({
                     html: `<div class="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center border-2 border-white shadow-lg">♻️</div>`,
@@ -753,30 +785,36 @@
         renderRecycleOnMap();
 
         const recycleList = document.getElementById('recycleList');
-        recyclePoints.forEach(point => {
-            const card = document.createElement('div');
-            card.className = "bg-slate-50 hover:bg-emerald-50/30 border border-slate-100 p-4 rounded-xl cursor-pointer";
-            card.innerHTML = `
-                <div class="flex items-start gap-3">
-                    <span class="text-xl">♻️</span>
-                    <div>
-                        <h4 class="font-bold text-xs text-slate-700">${point.name}</h4>
-                        <p class="text-[10px] text-slate-500 mt-1">📍 ${point.address}</p>
+        if (recycleList) {
+            recyclePoints.forEach(point => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 hover:bg-emerald-50/30 border border-slate-100 p-4 rounded-xl cursor-pointer";
+                card.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="text-xl">♻️</span>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-700">${point.name}</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">📍 ${point.address}</p>
+                        </div>
                     </div>
-                </div>
-            `;
-            card.addEventListener('click', () => {
-                showScreen('main');
-                map.flyTo([point.lat, point.lng], 15);
-                setTimeout(() => recycleMarkers[point.id].openPopup(), 1000);
+                `;
+                card.addEventListener('click', () => {
+                    showScreen('main');
+                    if (map) {
+                        map.flyTo([point.lat, point.lng], 15);
+                        setTimeout(() => { if (recycleMarkers[point.id]) recycleMarkers[point.id].openPopup(); }, 1000);
+                    }
+                });
+                recycleList.appendChild(card);
             });
-            recycleList.appendChild(card);
-        });
+        }
 
-        // Поиск
+        // --- УМНЫЙ ПОИСК ПО АДРЕСУ ---
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
+
         async function performSearch() {
+            if (!searchInput || !searchBtn || !map) return;
             const query = searchInput.value.trim();
             if (!query) return;
             try {
@@ -786,14 +824,17 @@
                     const lat = parseFloat(data[0].lat);
                     const lon = parseFloat(data[0].lon);
                     map.flyTo([lat, lon], 15);
+                    
                     if (tempMarker) map.removeLayer(tempMarker);
                     tempCoords = [lat, lon];
                     tempMarker = L.marker(tempCoords).addTo(map);
                 }
-            } catch (err) { console.error(err); }
+            } catch (err) { console.error("Ошибка поиска:", err); }
         }
-        searchBtn.addEventListener('click', performSearch);
+        
+        if (searchBtn) searchBtn.addEventListener('click', performSearch);
 
+        // --- ДОБАВЛЕНИЕ ЖАЛОБЫ ---
         const districtScores = { medeu: 91, bostandyk: 85, almaly: 79 };
         function detectDistrict(lat, lng) {
             if (lng > 76.95) return 'medeu';
@@ -802,12 +843,17 @@
         }
 
         function updateScoreboard() {
-            document.querySelector('#district-medeu .score-val').innerText = districtScores.medeu;
-            document.querySelector('#district-bostandyk .score-val').innerText = districtScores.bostandyk;
-            document.querySelector('#district-almaly .score-val').innerText = districtScores.almaly;
+            const medeuEl = document.querySelector('#district-medeu .score-val');
+            const bostandykEl = document.querySelector('#district-bostandyk .score-val');
+            const almalyEl = document.querySelector('#district-almaly .score-val');
+            
+            if (medeuEl) medeuEl.innerText = districtScores.medeu;
+            if (bostandykEl) bostandykEl.innerText = districtScores.bostandyk;
+            if (almalyEl) almalyEl.innerText = districtScores.almaly;
         }
 
         function addMarkerOnMap(report) {
+            if (!map || !userReportsGroup) return;
             const redIcon = L.divIcon({
                 html: `<div class="w-7 h-7 bg-rose-500 text-white rounded-full flex items-center justify-center border-2 border-white shadow-lg animate-bounce">⚠️</div>`,
                 className: '',
@@ -837,123 +883,137 @@
         let tempCoords = null;
         let tempMarker = null;
 
-        photoInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                selectedPhotoUrl = URL.createObjectURL(file);
-                imagePreview.src = selectedPhotoUrl;
-                previewContainer.classList.remove('hidden');
-                aiScanner.classList.remove('hidden');
-                aiStatusBg.className = "absolute inset-0 bg-white/80 backdrop-blur-[1px] flex items-center justify-center";
-                aiStatusText.innerText = "ИИ анализирует... 🤖";
-                submitBtn.disabled = true;
+        if (photoInput) {
+            photoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    selectedPhotoUrl = URL.createObjectURL(file);
+                    if (imagePreview) imagePreview.src = selectedPhotoUrl;
+                    if (previewContainer) previewContainer.classList.remove('hidden');
+                    if (aiScanner) aiScanner.classList.remove('hidden');
+                    if (aiStatusBg) aiStatusBg.className = "absolute inset-0 bg-white/80 backdrop-blur-[1px] flex items-center justify-center";
+                    if (aiStatusText) aiStatusText.innerText = "ИИ анализирует... 🤖";
+                    if (submitBtn) submitBtn.disabled = true;
 
-                setTimeout(() => {
-                    isAiVerified = true; 
-                    aiScanner.classList.add('hidden');
-                    aiStatusBg.className = "absolute top-1.5 left-1.5 flex items-center justify-center";
-                    aiStatusText.innerText = "✔ Проверено ИИ";
-                    aiStatusText.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500 text-white";
-                    uploadText.innerText = "Успешно!";
-                    submitBtn.disabled = false;
-                }, 1800);
-            }
-        });
+                    setTimeout(() => {
+                        isAiVerified = true; 
+                        if (aiScanner) aiScanner.classList.add('hidden');
+                        if (aiStatusBg) aiStatusBg.className = "absolute top-1.5 left-1.5 flex items-center justify-center";
+                        if (aiStatusText) {
+                            aiStatusText.innerText = "✔ Проверено ИИ";
+                            aiStatusText.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500 text-white";
+                        }
+                        if (uploadText) uploadText.innerText = "Успешно!";
+                        if (submitBtn) submitBtn.disabled = false;
+                    }, 1800);
+                }
+            });
+        }
 
-        map.on('click', function(e) {
-            tempCoords = [e.latlng.lat, e.latlng.lng];
-            if (tempMarker) map.removeLayer(tempMarker);
-            tempMarker = L.marker(tempCoords).addTo(map);
-        });
+        if (map) {
+            map.on('click', function(e) {
+                tempCoords = [e.latlng.lat, e.latlng.lng];
+                if (tempMarker) map.removeLayer(tempMarker);
+                tempMarker = L.marker(tempCoords).addTo(map);
+            });
+        }
 
-        document.getElementById('ecoForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            if (!currentUser) {
-                alert("Пожалуйста, сначала войдите в свой аккаунт, чтобы отправлять жалобы!");
-                showScreen('auth');
-                return;
-            }
+        const ecoForm = document.getElementById('ecoForm');
+        if (ecoForm) {
+            ecoForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!currentUser) {
+                    alert("Пожалуйста, сначала войдите в свой аккаунт, чтобы отправлять жалобы!");
+                    showScreen('auth');
+                    return;
+                }
 
-            const category = document.getElementById('category').value;
-            const description = document.getElementById('description').value;
+                const category = document.getElementById('category').value;
+                const description = document.getElementById('description').value;
 
-            if (!tempCoords) {
-                alert("Пожалуйста, сначала выберите точку на карте!");
-                return;
-            }
+                if (!tempCoords) {
+                    alert("Пожалуйста, сначала выберите точку на карте!");
+                    return;
+                }
 
-            if (!isAiVerified) {
-                alert("Пожалуйста, дождитесь окончания проверки ИИ!");
-                return;
-            }
+                if (!isAiVerified) {
+                    alert("Пожалуйста, дождитесь окончания проверки ИИ!");
+                    return;
+                }
 
-            // Получаем текущий список жалоб юзера для проверки «повышения» звания
-            let currentReportsCount = 0;
-            if (supabase) {
-                const { data } = await supabase.from('reports').select('id').eq('user_id', currentUser.id);
-                currentReportsCount = data ? data.length : 0;
-            } else {
-                currentReportsCount = localReports.filter(r => r.userId === currentUser.id).length;
-            }
+                let currentReportsCount = 0;
+                if (supabaseClient) {
+                    try {
+                        const { data } = await supabaseClient.from('reports').select('id').eq('user_id', currentUser.id);
+                        currentReportsCount = data ? data.length : 0;
+                    } catch (e) {
+                        currentReportsCount = localReports.filter(r => r.userId === currentUser.id).length;
+                    }
+                } else {
+                    currentReportsCount = localReports.filter(r => r.userId === currentUser.id).length;
+                }
 
-            const oldRank = getRank(currentReportsCount);
+                const oldRank = getRank(currentReportsCount);
 
-            const newReport = {
-                id: "rep_" + Date.now(),
-                userId: currentUser.id,
-                coords: tempCoords,
-                category: category,
-                desc: description,
-                status: "🟡 Получено",
-                photoUrl: selectedPhotoUrl,
-                created_at: new Date().toISOString()
-            };
-
-            // Сохранение
-            if (supabase) {
-                await supabase.from('reports').insert([{
-                    user_id: currentUser.id,
-                    category,
+                const newReport = {
+                    id: "rep_" + Date.now(),
+                    userId: currentUser.id,
+                    coords: tempCoords,
+                    category: category,
                     desc: description,
-                    lat: tempCoords[0],
-                    lng: tempCoords[1],
                     status: "🟡 Получено",
-                    photo_url: selectedPhotoUrl
-                }]);
-            } else {
-                localReports.push(newReport);
-                localStorage.setItem('ecomap_reports', JSON.stringify(localReports));
-            }
+                    photoUrl: selectedPhotoUrl,
+                    created_at: new Date().toISOString()
+                };
 
-            addMarkerOnMap(newReport);
+                if (supabaseClient) {
+                    try {
+                        await supabaseClient.from('reports').insert([{
+                            user_id: currentUser.id,
+                            category,
+                            desc: description,
+                            lat: tempCoords[0],
+                            lng: tempCoords[1],
+                            status: "🟡 Получено",
+                            photo_url: selectedPhotoUrl
+                        }]);
+                    } catch (err) {
+                        console.error("Не удалось отправить в Supabase, сохраняем локально", err);
+                    }
+                } else {
+                    localReports.push(newReport);
+                    localStorage.setItem('ecomap_reports', JSON.stringify(localReports));
+                }
 
-            const targetDistrict = detectDistrict(tempCoords[0], tempCoords[1]);
-            if (districtScores[targetDistrict] > 0) {
-                districtScores[targetDistrict] -= 2;
-                updateScoreboard();
-            }
+                addMarkerOnMap(newReport);
 
-            if (tempMarker) map.removeLayer(tempMarker);
-            document.getElementById('ecoForm').reset();
-            previewContainer.classList.add('hidden');
-            uploadText.innerText = "Выбрать файл фото";
-            tempCoords = null;
-            selectedPhotoUrl = null;
-            isAiVerified = false;
+                const targetDistrict = detectDistrict(tempCoords[0], tempCoords[1]);
+                if (districtScores[targetDistrict] > 0) {
+                    districtScores[targetDistrict] -= 2;
+                    updateScoreboard();
+                }
 
-            // Обновляем список жалоб в профиле
-            await renderUserReports();
+                if (tempMarker && map) map.removeLayer(tempMarker);
+                ecoForm.reset();
+                if (previewContainer) previewContainer.classList.add('hidden');
+                if (uploadText) uploadText.innerText = "Выбрать файл фото";
+                tempCoords = null;
+                selectedPhotoUrl = null;
+                isAiVerified = false;
 
-            // Проверяем, изменился ли уровень после добавления новой точки
-            const newRank = getRank(currentReportsCount + 1);
-            if (newRank.name !== oldRank.name) {
-                showLevelUpAlert(newRank.name);
-            } else {
-                alert("Ваше обращение добавлено и сохранено в вашем профиле!");
-            }
-        });
+                await renderUserReports();
 
+                const newRank = getRank(currentReportsCount + 1);
+                if (newRank.name !== oldRank.name) {
+                    showLevelUpAlert(newRank.name);
+                } else {
+                    alert("Ваше обращение добавлено и сохранено в вашем профиле!");
+                }
+            });
+        }
+
+        // Запуск проверки сессии
         checkSession();
     </script>
 </body>
