@@ -9,7 +9,6 @@
     <!-- Стили Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        /* Высота карты по умолчанию для десктопа */
         #map { height: 100%; }
         
         /* Анимация сканирования ИИ */
@@ -23,14 +22,16 @@
         }
     </style>
 </head>
-<body class="bg-slate-900 text-white font-sans overflow-x-hidden md:overflow-hidden h-screen flex flex-col">
+<body class="bg-slate-900 text-white font-sans overflow-x-hidden md:overflow-hidden h-screen flex flex-col relative">
 
     <!-- Шапка сайта -->
-    <header class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-4 md:px-6 shrink-0 z-10">
-        <div class="flex items-center gap-2 md:grid-cols-2">
+    <header class="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-4 md:px-6 shrink-0 z-20">
+        <!-- Логотип теперь кликабельный кнопка -->
+        <button id="logoBtn" class="flex items-center gap-2 hover:opacity-80 transition-opacity focus:outline-none">
             <span class="text-xl md:text-2xl">🌍</span>
             <h1 class="text-lg md:text-xl font-bold tracking-wider text-emerald-400">EcoMap KZ</h1>
-        </div>
+            <span class="text-xs text-slate-500 animate-pulse ml-1">▼</span>
+        </button>
         <div>
             <span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full text-xs border border-emerald-500/20">
                 AI Active 🤖
@@ -38,13 +39,13 @@
         </div>
     </header>
 
-    <!-- Основной контейнер -->
-    <div class="flex flex-col md:flex-row flex-1 min-h-0 relative">
+    <!-- Основной контейнер с картой и формой -->
+    <div id="mainContent" class="flex flex-col md:flex-row flex-1 min-h-0 relative">
         
-        <!-- Карта (на мобильных идет ПЕРВОЙ и занимает 45% экрана, на ПК — на весь экран справа) -->
-        <main id="map" class="w-full h-[45vh] md:h-auto md:flex-1 order-1 md:order-2 z-0"></main>
+        <!-- Карта -->
+        <main id="map" class="w-full h-[55vh] md:h-auto md:flex-1 order-1 md:order-2 z-0"></main>
 
-        <!-- Боковая панель (на мобильных идет ВТОРОЙ, скроллится вниз, на ПК — слева 384px) -->
+        <!-- Боковая панель -->
         <aside class="w-full md:w-96 bg-slate-800/95 border-t md:border-t-0 md:border-r border-slate-700 p-4 md:p-6 flex flex-col gap-5 overflow-y-auto order-2 md:order-1 shrink-0 z-[1000] shadow-2xl">
             <div>
                 <h2 class="text-base md:text-lg font-semibold mb-1 text-emerald-300">Сообщить о проблеме</h2>
@@ -115,12 +116,98 @@
                 </div>
             </div>
         </aside>
+    </div>
 
+    <!-- ПОЛНОЭКРАННОЕ ИНТЕРАКТИВНОЕ МЕНЮ (По умолчанию скрыто) -->
+    <div id="navigationMenu" class="hidden absolute inset-0 top-16 bg-slate-900/98 z-[9999] flex flex-col md:flex-row p-6 gap-8 overflow-y-auto">
+        <!-- Левая часть: Кнопки навигации с иконками -->
+        <div class="w-full md:w-80 flex flex-col gap-3 shrink-0">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Навигация</h3>
+            
+            <button id="navReportBtn" class="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-emerald-500/50 p-4 rounded-xl text-left transition-all group">
+                <span class="text-2xl group-hover:scale-110 transition-transform">🗺</span>
+                <div>
+                    <div class="font-bold text-sm text-slate-200 group-hover:text-emerald-400 transition-colors">Подать жалобу</div>
+                    <div class="text-[11px] text-slate-400">Карта и форма отправки обращений</div>
+                </div>
+            </button>
+
+            <button id="navAboutBtn" class="w-full flex items-center gap-3 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-emerald-500/50 p-4 rounded-xl text-left transition-all group">
+                <span class="text-2xl group-hover:scale-110 transition-transform">👥</span>
+                <div>
+                    <div class="font-bold text-sm text-slate-200 group-hover:text-emerald-400 transition-colors">Кто мы?</div>
+                    <div class="text-[11px] text-slate-400">Миссия, цели и идея проекта</div>
+                </div>
+            </button>
+        </div>
+
+        <!-- Правая часть: Контентный блок -->
+        <div class="flex-1 bg-slate-800/50 border border-slate-750 rounded-2xl p-6 md:p-8">
+            <!-- Блок "Кто мы" (показывается по умолчанию при переходе на эту вкладку) -->
+            <div id="aboutContent" class="max-w-2xl prose prose-invert">
+                <h2 class="text-2xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                    <span>👥</span> Кто мы?
+                </h2>
+                <div class="text-slate-300 space-y-4 text-sm md:text-base leading-relaxed">
+                    <p>
+                        <strong>EcoMap KZ</strong> — это команда людей, которым небезразлично будущее окружающей среды Казахстана. Мы объединены одной целью — сделать нашу страну чище, безопаснее и экологичнее.
+                    </p>
+                    <p>
+                        Мы создали EcoMap KZ для борьбы с загрязнением окружающей среды. Наша платформа помогает жителям быстро сообщать о незаконных свалках, загрязнении водоемов, мусоре и других экологических проблемах, чтобы вместе находить решения и привлекать внимание общества и ответственных организаций.
+                    </p>
+                    <p>
+                        Мы верим, что даже одно сообщение может стать первым шагом к большим изменениям. Именно поэтому наша миссия — объединить людей, технологии и экологическую ответственность в одном удобном сервисе.
+                    </p>
+                    <p class="pt-2 font-semibold text-emerald-300 border-t border-slate-700/50 italic text-right">
+                        EcoMap KZ — вместе за чистый Казахстан.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Скрипты Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // ЛОГИКА НАВИГАЦИОННОГО МЕНЮ
+        const logoBtn = document.getElementById('logoBtn');
+        const navigationMenu = document.getElementById('navigationMenu');
+        const mainContent = document.getElementById('mainContent');
+        const navReportBtn = document.getElementById('navReportBtn');
+        const navAboutBtn = document.getElementById('navAboutBtn');
+        const aboutContent = document.getElementById('aboutContent');
+
+        // Открытие/закрытие меню при клике на логотип
+        logoBtn.addEventListener('click', () => {
+            if (navigationMenu.classList.contains('hidden')) {
+                navigationMenu.classList.remove('hidden');
+                // Делаем активной вкладку "Кто мы?" по умолчанию при входе
+                selectMenuTab('about');
+            } else {
+                navigationMenu.classList.add('hidden');
+            }
+        });
+
+        // Клик по кнопке "Подать жалобу" в меню
+        navReportBtn.addEventListener('click', () => {
+            navigationMenu.classList.add('hidden'); // Просто закрываем меню, возвращая к карте
+        });
+
+        // Клик по кнопке "Кто мы?" в меню
+        navAboutBtn.addEventListener('click', () => {
+            selectMenuTab('about');
+        });
+
+        // Вспомогательная функция переключения контента в меню
+        function selectMenuTab(tab) {
+            if (tab === 'about') {
+                aboutContent.classList.remove('hidden');
+                navAboutBtn.classList.add('border-emerald-500', 'bg-slate-750');
+                navReportBtn.classList.remove('border-emerald-500', 'bg-slate-750');
+            }
+        }
+
+        // --- ДАЛЬШЕ ИДЕТ ЛОГИКА КАРТЫ И ИИ (БЕЗ ИЗМЕНЕНИЙ) ---
         const districtScores = { medeu: 91, bostandyk: 85, almaly: 79 };
 
         function detectDistrict(lat, lng) {
@@ -144,12 +231,8 @@
             });
         }
 
-        // Инициализация карты
-        const map = L.map('map').setView([43.238949, 76.945408], 12);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OSM & CARTO'
-        }).addTo(map);
+        const map = L.map('map', { attributionControl: false }).setView([43.238949, 76.945408], 12);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
 
         function addMarker(report) {
             const marker = L.marker(report.coords).addTo(map);
@@ -196,7 +279,7 @@
                 previewContainer.classList.remove('hidden');
                 aiScanner.classList.remove('hidden');
                 aiStatusBg.className = "absolute inset-0 bg-slate-900/60 flex items-center justify-center";
-                aiStatusText.innerText = "ИИ анализирует фото... 🤖";
+                aiStatusText.innerText = "ИИ анализирует... 🤖";
                 aiStatusText.className = "text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-amber-400";
                 submitBtn.disabled = true;
                 submitBtn.innerText = "ИИ проверяет фото...";
