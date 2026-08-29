@@ -10,7 +10,15 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  width: 100%;
+    <style>
+        html, body {
+            height: auto;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+        #map {
+            width: 100%;
             height: 100%;
             min-height: 100%;
             display: block;
@@ -1208,28 +1216,6 @@
                 alert(t('alertSuccessReport'));
             }
         });
-      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-  const SUPABASE_URL = 'https://xfmmdtgikvwumzmrxfao.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbW1kdGdpa3Z3dW16bXJ4ZmFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTUxMTUsImV4cCI6MjEwMzU5MTExNX0.POHcS1cw8wq6JEs4gYmlDRrqooS1G5JMGe28-MV3Up8';
-  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  uploadText.innerText = t('uploadText');
-  document.getElementById('subcategory-container').style.display = "none";
-  document.getElementById('other-problem-container').style.display = "none";
-  tempCoords = null;
-  selectedPhotoUrl = null;
-  isAiVerified = false;
-
-  await renderUserReports();
-
-  const newTier = getRank(currentReportsCount + 1);
-  if (newTier.nameKey !== oldTier.nameKey) {
-      showLevelUpAlert(newTier.nameKey);
-  } else {
-      alert(t('alertSuccessReport'));
-  }
-</script>
+    </script>
 </body>
 </html>
