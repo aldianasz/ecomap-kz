@@ -39,14 +39,14 @@
             animation: scan 2s linear infinite;
         }
         .leaflet-popup-content-wrapper {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px);
             border-radius: 12px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(226, 232, 240, 0.8);
         }
         .leaflet-popup-tip {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
         }
         @keyframes celebrate {
             0%, 100% { transform: scale(1); }
@@ -62,7 +62,7 @@
     <!-- МОДАЛКА НОВОГО ЗВАНИЯ -->
     <div id="levelUpModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[99999] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
         <div class="bg-white rounded-3xl p-8 max-w-sm w-full border border-slate-100 shadow-2xl text-center transform scale-95 transition-transform duration-300">
-            <span class="text-6xl inline-block celebrate-animation mb-4" id="modalBadge">🌱</span>
+            <span class="text-6xl inline-block celebrate-animation mb-4" id="modalBadge">🎉</span>
             <h2 class="text-2xl font-black text-slate-800 mb-2" data-i18n="modalNewRankTitle">Новое звание! 🎉</h2>
             <p class="text-sm text-slate-500 mb-6" data-i18n="modalNewRankSubtitle">Ваш вклад делает Казахстан чище. Поздравляем с достижением уровня:</p>
             <div class="bg-emerald-50 text-emerald-700 font-bold text-lg py-2 px-6 rounded-full inline-block border border-emerald-100 mb-6" id="modalRankName">
@@ -77,9 +77,9 @@
     <!-- Шапка сайта -->
     <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 md:px-6 sticky top-0 z-[2000]">
         <button id="logoBtn" class="flex items-center gap-2 hover:opacity-80 transition-all focus:outline-none group">
-            <span class="text-xl md:text-2xl group-hover:scale-110 transition-transform">🌍</span>
+            <span class="text-xl md:text-2xl group-hover:scale-110 transition-transform">🌱</span>
             <h1 class="text-lg md:text-xl font-bold tracking-wider text-emerald-600">EcoMap KZ</h1>
-            <span class="text-xs text-slate-400 ml-1 transition-transform group-hover:translate-y-0.5">▼</span>
+            <span class="text-xs text-slate-400 ml-1 transition-transform group-hover:translate-y-0.5">☰</span>
         </button>
         <div class="flex items-center gap-3">
             <!-- ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА -->
@@ -100,7 +100,7 @@
     <div id="sideDrawer" class="fixed top-0 left-0 h-full w-[85%] md:w-[380px] bg-white border-r border-slate-100 z-[9999] shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-6">
         <div class="flex items-center justify-between mb-8">
             <span class="text-xl font-bold text-emerald-600 flex items-center gap-2">
-                <span>🌍</span> EcoMap KZ
+                <span>🌱</span> EcoMap KZ
             </span>
             <button id="closeDrawerBtn" class="text-2xl text-slate-400 hover:text-slate-600 transition-colors focus:outline-none">&times;</button>
         </div>
@@ -109,7 +109,7 @@
             <span class="text-xs font-bold uppercase tracking-wider text-slate-400" data-i18n="menuNavTitle">Навигация</span>
             
             <button id="menuReportBtn" class="w-full flex items-center gap-3 bg-slate-50 hover:bg-emerald-50/50 border border-slate-100 hover:border-emerald-200 p-4 rounded-xl text-left transition-all hover:scale-[1.02] active:scale-[0.98] group">
-                <span class="text-xl group-hover:scale-110 transition-transform">🗺</span>
+                <span class="text-xl group-hover:scale-110 transition-transform">📢</span>
                 <div>
                     <div class="font-semibold text-sm text-slate-700 group-hover:text-emerald-700 transition-colors" data-i18n="menuReport">Подать жалобу</div>
                     <div class="text-[10px] text-slate-400" data-i18n="menuReportSub">Карта и форма обращений</div>
@@ -117,7 +117,7 @@
             </button>
 
             <button id="menuAboutBtn" class="w-full flex items-center gap-3 bg-slate-50 hover:bg-emerald-50/50 border border-slate-100 hover:border-emerald-200 p-4 rounded-xl text-left transition-all hover:scale-[1.02] active:scale-[0.98] group">
-                <span class="text-xl group-hover:scale-110 transition-transform">👥</span>
+                <span class="text-xl group-hover:scale-110 transition-transform">ℹ️</span>
                 <div>
                     <div class="font-semibold text-sm text-slate-700 group-hover:text-emerald-700 transition-colors" data-i18n="menuAbout">Кто мы?</div>
                     <div class="text-[10px] text-slate-400" data-i18n="menuAboutSub">О проекте и нашей миссии</div>
@@ -183,7 +183,7 @@
             <div class="flex-1 bg-white border border-slate-100 p-6 rounded-2xl shadow-md">
                 <div class="mb-5">
                     <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                        <span class="text-emerald-500">✏️</span> <span data-i18n="formTitle">Сообщить о проблеме</span>
+                        <span class="text-emerald-500">📝</span> <span data-i18n="formTitle">Сообщить о проблеме</span>
                     </h2>
                     <p class="text-xs text-slate-400 mt-1" data-i18n="formSubtitle">Выберите точку на карте, заполните форму. Требуется авторизация.</p>
                 </div>
@@ -193,14 +193,14 @@
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5" data-i18n="labelCategory">Основная категория</label>
                         <select id="problem-category" name="category" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 text-xs focus:outline-none focus:border-emerald-500" required>
                             <option value="" disabled selected data-i18n="catDefault">Выберите категорию...</option>
-                            <option value="waste" data-i18n="catWaste">🗑️ Мусор и отходы</option>
+                            <option value="waste" data-i18n="catWaste">🚮 Мусор и отходы</option>
                             <option value="transport" data-i18n="catTransport">🚗 Дороги и транспорт</option>
                             <option value="nature" data-i18n="catNature">🌳 Природа и зелёные зоны</option>
                             <option value="air" data-i18n="catAir">💨 Загрязнение воздуха</option>
                             <option value="water" data-i18n="catWater">💧 Загрязнение воды</option>
                             <option value="infrastructure" data-i18n="catInfra">🏗️ Городская инфраструктура и стройки</option>
                             <option value="noise" data-i18n="catNoise">🔊 Шум и световое загрязнение</option>
-                            <option value="other" data-i18n="catOther">🌱 Другие экологические проблемы</option>
+                            <option value="other" data-i18n="catOther">⚠️ Другие экологические проблемы</option>
                         </select>
                     </div>
 
@@ -225,7 +225,7 @@
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5" data-i18n="labelPhoto">Фотография</label>
                         <label class="flex flex-col items-center justify-center w-full h-16 border-2 border-slate-200 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-emerald-50/30 hover:border-emerald-400 transition-all">
                             <div class="flex flex-col items-center justify-center py-2">
-                                <span class="text-lg mb-0.5">📸</span>
+                                <span class="text-lg mb-0.5">📷</span>
                                 <p class="text-[10px] font-medium text-slate-400" id="uploadText" data-i18n="uploadText">Выбрать файл фото</p>
                             </div>
                             <input type="file" id="photoInput" accept="image/*" class="hidden" required />
@@ -314,7 +314,7 @@
                         <div class="flex items-center gap-2">
                             <h2 class="text-xl font-extrabold text-slate-800" id="profileNickname">@username</h2>
                             <span id="profileRankBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-1">
-                                🌱 Первый шаг
+                                 🌱 Первый шаг
                             </span>
                         </div>
                         <p class="text-xs text-slate-400 mt-0.5" id="profileEmail">email@example.com</p>
@@ -347,7 +347,7 @@
                         <p class="text-[9px] text-slate-400 mt-1" data-i18n="badge1Desc">Первая отправленная проблема</p>
                     </div>
                     <div id="badge-five" class="bg-white border border-slate-100 rounded-2xl p-4 text-center flex flex-col items-center shadow-sm opacity-40 transition-all">
-                        <span class="text-3xl mb-2">🔎</span>
+                        <span class="text-3xl mb-2">🔍</span>
                         <h4 class="font-bold text-xs text-slate-700" data-i18n="badge2Name">Наблюдатель</h4>
                         <p class="text-[9px] text-slate-400 mt-1" data-i18n="badge2Desc">Несколько подтверждённых сообщений</p>
                     </div>
@@ -362,7 +362,7 @@
                         <p class="text-[9px] text-slate-400 mt-1" data-i18n="badge4Desc">10 жалоб</p>
                     </div>
                     <div id="badge-hero" class="bg-white border border-slate-100 rounded-2xl p-4 text-center flex flex-col items-center shadow-sm opacity-40 transition-all col-span-2 sm:col-span-4">
-                        <span class="text-3xl mb-2">♻️</span>
+                        <span class="text-3xl mb-2">🦸‍♂️</span>
                         <h4 class="font-bold text-xs text-slate-700" data-i18n="badge5Name">Эко-герой</h4>
                         <p class="text-[9px] text-slate-400 mt-1" data-i18n="badge5Desc">15 и более жалоб</p>
                     </div>
@@ -372,7 +372,7 @@
             <div>
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4" data-i18n="myReportsTitle">Мои отправленные жалобы</h3>
                 <div id="noReportsMessage" class="hidden py-12 text-center border border-dashed border-slate-200 rounded-xl bg-slate-50">
-                    <span class="text-3xl">🌱</span>
+                    <span class="text-3xl">📥</span>
                     <p class="text-xs text-slate-500 mt-2 font-medium" data-i18n="noReportsText">У вас пока нет отправленных жалоб.</p>
                 </div>
                 <div id="userReportsList" class="space-y-3"></div>
@@ -381,25 +381,39 @@
     </div>
 
     <!-- СТРАНИЦА "КТО МЫ" -->
-    <div id="aboutSection" class="hidden w-full max-w-3xl mx-auto px-4 py-12 min-h-[calc(100vh-64px)] fade-in">
+    <div id="aboutSection" class="hidden w-full max-w-4xl mx-auto px-4 py-12 min-h-[calc(100vh-64px)] fade-in">
         <div class="bg-white border border-slate-100 rounded-2xl p-6 md:p-10 shadow-lg">
-            <h2 class="text-2xl md:text-3xl font-bold text-emerald-600 mb-6 flex items-center gap-2">
-                <span>👥</span> <span data-i18n="aboutHeader">Кто мы?</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-emerald-600 mb-6 flex items-center gap-3 border-b border-slate-100 pb-4">
+                <span>ℹ️</span> <span data-i18n="aboutHeader">Кто мы?</span>
             </h2>
-            <div class="text-slate-600 space-y-5 text-sm md:text-base leading-relaxed">
-                <p data-i18n="aboutText1">
-                    <strong>EcoMap KZ</strong> — это команда людей, которым небезразлично будущее окружающей среды Казахстана. Мы объединены одной целью — сделать нашу страну чище, безопаснее и экологичнее.
+            <div class="text-slate-700 space-y-5 text-sm md:text-base leading-relaxed">
+                <p class="font-semibold text-lg text-emerald-800" data-i18n="aboutText1">
+                    EcoMap KZ - это цифровая экологическая платформа, созданная для мониторинга состояния городской среды и вовлечения жителей в решение экологических проблем.
                 </p>
+                <p data-i18n="aboutText2">
+                    Мы предоставляем возможность фиксировать проблемы на интерактивной карте, добавлять фотографии и описания, отслеживать экологическое состояние районов и находить пункты переработки отходов.
+                </p>
+                <p data-i18n="aboutText3">
+                    Наша деятельность направлена на повышение экологической осведомлённости населения, развитие гражданской ответственности и формирование единого информационного пространства, в котором жители могут участвовать в улучшении окружающей среды.
+                </p>
+                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-900 font-medium mt-6">
+                    <strong>EcoMap KZ</strong> - это инструмент взаимодействия людей, технологий и городской среды для создания более чистых и устойчивых городов Казахстана.
+                </div>
             </div>
         </div>
     </div>
 
     <!-- СТРАНИЦА "ПУНКТЫ ПЕРЕРАБОТКИ" -->
-    <div id="recycleSection" class="hidden w-full max-w-4xl mx-auto px-4 py-12 min-h-[calc(100vh-64px)] fade-in">
+    <div id="recycleSection" class="hidden w-full max-w-5xl mx-auto px-4 py-12 min-h-[calc(100vh-64px)] fade-in">
         <div class="bg-white border border-slate-100 rounded-2xl p-6 md:p-8 shadow-lg">
-            <h2 class="text-2xl font-bold text-emerald-600 mb-6 flex items-center gap-2">
-                <span>♻️</span> <span data-i18n="recycleHeader">Пункты приема и переработки отходов</span>
-            </h2>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-slate-100 pb-4">
+                <h2 class="text-2xl font-bold text-emerald-600 flex items-center gap-2">
+                    <span>♻️</span> <span data-i18n="recycleHeader">Пункты приема и переработки отходов</span>
+                </h2>
+                <span class="text-xs font-semibold px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100 w-max">
+                    Алматы
+                </span>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="recycleList"></div>
         </div>
     </div>
@@ -407,6 +421,118 @@
     <!-- Загрузка библиотеки Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // База данных 12 пунктов переработки
+        const recyclePoints = [
+            {
+                id: 1,
+                name: "АлатауЭкоВтор — Байзакова",
+                address: "ул. Байзакова, 73/1",
+                accepts: "пластик, бумагу, картон, стекло, металл, тетрапак, батарейки, электронику, пенопласт и смешанное вторсырьё.",
+                hours: "Пн–Сб: 10:00–19:00",
+                lat: 43.2515,
+                lng: 76.9150
+            },
+            {
+                id: 2,
+                name: "АлатауЭкоВтор — Нуркент",
+                address: "мкр. Нуркент, 7/1",
+                accepts: "пластик, бумагу, картон, батарейки, электронику и смешанное вторсырьё.",
+                hours: "Пн–Сб: 10:00–19:00",
+                lat: 43.2750,
+                lng: 76.8150
+            },
+            {
+                id: 3,
+                name: "АлатауЭкоВтор — Розыбакиева",
+                address: "ул. Розыбакиева, 247/3",
+                accepts: "пластик, бумагу, картон, батарейки, электронику и смешанное вторсырьё.",
+                hours: "Пн–Сб: 10:00–19:00",
+                lat: 43.2185,
+                lng: 76.8962
+            },
+            {
+                id: 4,
+                name: "КазМакТрейд",
+                address: "ул. Ырысты, 15А",
+                accepts: "макулатуру, бумагу, картон и пластик.",
+                hours: "Пн–Сб: 09:00–18:00",
+                lat: 43.2798,
+                lng: 76.8710
+            },
+            {
+                id: 5,
+                name: "Kazakhstan Waste Recycling (KWR) — Тимирязева",
+                address: "ул. Тимирязева, 81/3, киоск",
+                accepts: "бумагу, картон, металл и другие виды вторсырья в зависимости от пункта.",
+                hours: "Уточняйте на месте",
+                lat: 43.2240,
+                lng: 76.9080
+            },
+            {
+                id: 6,
+                name: "Kazakhstan Waste Recycling (KWR) — Самал-1",
+                address: "мкр. Самал-1, 32, киоск",
+                accepts: "бумагу, картон, металл и тетрапак.",
+                hours: "Уточняйте на месте",
+                lat: 43.2320,
+                lng: 76.9580
+            },
+            {
+                id: 7,
+                name: "Kazakhstan Waste Recycling (KWR) — Аксай-3",
+                address: "мкр. Аксай-3, 1А/1",
+                accepts: "вторсырьё; конкретный перечень лучше уточнять перед сдачей.",
+                hours: "Уточняйте на месте",
+                lat: 43.2380,
+                lng: 76.8430
+            },
+            {
+                id: 8,
+                name: "Kazakhstan Waste Recycling (KWR) — 8-й микрорайон",
+                address: "8-й микрорайон, 58А",
+                accepts: "приём вторичного сырья, включая бумагу, картон и пластик.",
+                hours: "Уточняйте на месте",
+                lat: 43.2290,
+                lng: 76.8620
+            },
+            {
+                id: 9,
+                name: "Экохаб",
+                address: "ул. Маркова, 44",
+                accepts: "различные виды вторсырья; экохаб также используется для экологического просвещения и мероприятий.",
+                hours: "Уточняйте на месте",
+                lat: 43.2345,
+                lng: 76.9460
+            },
+            {
+                id: 10,
+                name: "EcoLog Kazakhstan",
+                address: "ул. Серикова, 61",
+                accepts: "электроника, батарейки и опасные отходы.",
+                hours: "Пн–Пт: 09:00–18:00",
+                lat: 43.3050,
+                lng: 76.9320
+            },
+            {
+                id: 11,
+                name: "ПромТехноРесурсKZ",
+                address: "пр. Сейфуллина, 284",
+                accepts: "электроника, оргтехника и опасные отходы.",
+                hours: "Пн–Пт: 09:00–18:00",
+                lat: 43.2710,
+                lng: 76.9310
+            },
+            {
+                id: 12,
+                name: "EcoSen — Байзакова",
+                address: "ул. Байзакова, 73/1",
+                accepts: "тетрапак, смешанное вторсырьё и пенопласт.",
+                hours: "Уточняйте на месте",
+                lat: 43.2518,
+                lng: 76.9155
+            }
+        ];
+
         // --- СИСТЕМА ЛОКАЛИЗАЦИИ (РУССКИЙ И КАЗАХСКИЙ) ---
         const translations = {
             ru: {
@@ -416,14 +542,14 @@
                 formSubtitle: "Выберите точку на карте, заполните форму. Требуется авторизация.",
                 labelCategory: "Основная категория",
                 catDefault: "Выберите категорию...",
-                catWaste: "🗑️ Мусор и отходы",
+                catWaste: "🚮 Мусор и отходы",
                 catTransport: "🚗 Дороги и транспорт",
                 catNature: "🌳 Природа и зелёные зоны",
                 catAir: "💨 Загрязнение воздуха",
                 catWater: "💧 Загрязнение воды",
                 catInfra: "🏗️ Городская инфраструктура и стройки",
                 catNoise: "🔊 Шум и световое загрязнение",
-                catOther: "🌱 Другие экологические проблемы",
+                catOther: "⚠️ Другие экологические проблемы",
                 labelSubcategory: "Подкатегория",
                 subcatDefault: "Выберите подкатегорию...",
                 labelCustomDesc: "Опишите проблему своими словами",
@@ -433,7 +559,7 @@
                 labelPhoto: "Фотография",
                 uploadText: "Выбрать файл фото",
                 aiAnalyzing: "ИИ анализирует... 🤖",
-                aiVerified: "✔ Проверено ИИ",
+                aiVerified: "✅ Проверено ИИ",
                 uploadSuccess: "Успешно!",
                 submitBtn: "Отправить обращение",
                 ratingTitle: "Рейтинг районов (EcoScore)",
@@ -479,7 +605,9 @@
                 myReportsTitle: "Мои отправленные жалобы",
                 noReportsText: "У вас пока нет отправленных жалоб.",
                 aboutHeader: "Кто мы?",
-                aboutText1: "EcoMap KZ — это команда людей, которым небезразлично будущее окружающей среды Казахстана. Мы объединены одной целью — сделать нашу страну чище, безопаснее и экологичнее.",
+                aboutText1: "EcoMap KZ - это цифровая экологическая платформа, созданная для мониторинга состояния городской среды и вовлечения жителей в решение экологических проблем.",
+                aboutText2: "Мы предоставляем возможность фиксировать проблемы на интерактивной карте, добавлять фотографии и описания, отслеживать экологическое состояние районов и находить пункты переработки отходов.",
+                aboutText3: "Наша деятельность направлена на повышение экологической осведомлённости населения, развитие гражданской ответственности и формирование единого информационного пространства, в котором жители могут участвовать в улучшении окружающей среды.",
                 recycleHeader: "Пункты приема и переработки отходов",
                 modalNewRankTitle: "Новое звание! 🎉",
                 modalNewRankSubtitle: "Ваш вклад делает Казахстан чище. Поздравляем с достижением уровня:",
@@ -497,14 +625,14 @@
                 formSubtitle: "Картадан нүкте таңдап, пішінді толтырыңыз. Авторизация қажет.",
                 labelCategory: "Негізгі санат",
                 catDefault: "Санатты таңдаңыз...",
-                catWaste: "🗑️ Қоқыс пен қалдықтар",
+                catWaste: "🚮 Қоқыс пен қалдықтар",
                 catTransport: "🚗 Жолдар мен көлік",
                 catNature: "🌳 Табиғат пен жасыл аймақтар",
                 catAir: "💨 Ауаның ластануы",
                 catWater: "💧 Судың ластануы",
                 catInfra: "🏗️ Қалалық инфрақұрылым және құрылыс",
                 catNoise: "🔊 Шу және жарық ластануы",
-                catOther: "🌱 Басқа экологиялық мәселелер",
+                catOther: "⚠️ Басқа экологиялық мәселелер",
                 labelSubcategory: "Ішкі санат",
                 subcatDefault: "Ішкі санатты таңдаңыз...",
                 labelCustomDesc: "Мәселені өз сөзіңізбен сипаттаңыз",
@@ -514,13 +642,13 @@
                 labelPhoto: "Фотосурет",
                 uploadText: "Фото файлын таңдау",
                 aiAnalyzing: "ЖИ талдауда... 🤖",
-                aiVerified: "✔ ЖИ тексерді",
+                aiVerified: "✅ ЖИ тексерді",
                 uploadSuccess: "Сәтті!",
                 submitBtn: "Өтінішті жіберу",
                 ratingTitle: "Аудандар рейтингі (EcoScore)",
                 districtMedeu: "Медеу",
                 districtBostandyk: "Бостандық",
-                districtAlmaly: "Алматы",
+                districtAlmaly: "Алмалы",
                 menuNavTitle: "Навигация",
                 menuReport: "Шағым түсіру",
                 menuReportSub: "Карта және өтініштер формасы",
@@ -538,14 +666,14 @@
                 authTitleReg: "Аккаунт құру",
                 authSubtitleReg: "Экологиялық есептер жіберу үшін профиль жасаңыз",
                 labelNickname: "Бірегей лақап ат (никнейм)",
-                labelEmail: "Электрондық пошта",
+                labelEmail: "Электронды пошта",
                 labelPassword: "Құпия сөз",
                 authBtnLogin: "Кіру",
                 authBtnReg: "Тіркелу",
                 authToggleToReg: "Аккаунтыңыз жоқ па? Тіркелу",
-                authToggleToLogin: "Аккаунтыңыз бар ма? Кіру",
+                authToggleToLogin: "Уже бар ма? Кіру",
                 logoutBtn: "Аккаунттан шығу",
-                rankProgressTitle: "Атақ прогресссі",
+                rankProgressTitle: "Атақ прогресі",
                 achievementsTitle: "Экологиялық жетістіктер жинағы",
                 badge1Name: "Бірінші қадам",
                 badge1Desc: "Бірінші жіберілген мәселе",
@@ -560,7 +688,9 @@
                 myReportsTitle: "Менің жіберілген шағымдарым",
                 noReportsText: "Әзірге жіберілген шағымдарыңыз жоқ.",
                 aboutHeader: "Біз кімбіз?",
-                aboutText1: "EcoMap KZ — Қазақстанның қоршаған ортасының болашағына бей-жай қарамайтын адамдар командасы. Біз елімізді таза, қауіпсіз және экологиялық таза ету мақсатымен біріктік.",
+                aboutText1: "EcoMap KZ - бұл қалалық ортаның жағдайын мониторингтеуге және тұрғындарды экологиялық мәселелерді шешуге тартуға арналған сандық экологиялық платформа.",
+                aboutText2: "Біз интерактивті картада мәселелерді тіркеуге, фотосуреттер мен сипаттамаларды қосуға, аудандардың экологиялық жағдайын бақылауға және қалдықтарды қайта өңдеу пункттерін табуға мүмкіндік береміз.",
+                aboutText3: "Біздің қызметіміз халықтың экологиялық хабардарлығын арттыруға, азаматтық жауапкершілікті дамытуға бағытталған.",
                 recycleHeader: "Қалдықтарды қабылдау және қайта өңдеу пункттері",
                 modalNewRankTitle: "Жаңа атақ! 🎉",
                 modalNewRankSubtitle: "Сіздің үлесіңіз Қазақстанды таза етеді. Келесі деңгейге жетуіңізбен құттықтаймыз:",
@@ -575,72 +705,22 @@
 
         const subcategoriesData = {
             ru: {
-                waste: [
-                    "Незаконные свалки", "Переполненные мусорные контейнеры", "Мусор, разбросанный на улицах",
-                    "Свалки возле жилых домов", "Свалки в лесопарковых зонах", "Стихийные свалки возле рек",
-                    "Неправильная сортировка отходов", "Неработающие пункты переработки", "Строительный мусор на пустырях", "Сжигание мусора"
-                ],
-                transport: [
-                    "Разбитые дороги", "Ямы на дорогах", "Отсутствие тротуаров", "Разрушенные тротуары",
-                    "Отсутствие велодорожек", "Постоянные пробки", "Большое скопление автомобилей",
-                    "Незаконные парковки на газонах", "Автомобили на зелёных зонах", "Загрязнение дорог маслами и техническими жидкостями", "Сильная пыль возле крупных дорог"
-                ],
-                nature: [
-                    "Незаконная вырубка деревьев", "Уничтожение газонов", "Вытоптанные зелёные зоны",
-                    "Повреждённые деревья", "Недостаток зелёных насаждений", "Заброшенные парки",
-                    "Загрязнённые лесопарковые зоны", "Строительство на месте зелёных территорий", "Сухие или уничтоженные участки растительности"
-                ],
-                air: [
-                    "Дым от предприятий", "Сильные выбросы с промышленных объектов", "Дым от котельных",
-                    "Загрязнение возле ТЭЦ", "Дым от сжигания мусора", "Сильное загрязнение воздуха возле оживлённых магистралей",
-                    "Пыль от строительных площадок", "Пыльные участки дорог"
-                ],
-                water: [
-                    "Загрязнённые реки", "Загрязнённые озёра", "Мусор в реках", "Слив сточных вод",
-                    "Загрязнённые арыки", "Загрязнение водоёмов нефтепродуктами", "Несанкционированные сбросы", "Засорённые ливневые стоки"
-                ],
-                infrastructure: [
-                    "Заброшенные здания", "Разрушенные здания", "Незаконные стройки", "Строительные площадки без ограждения",
-                    "Строительный мусор", "Разрушенные канализационные системы", "Засорённые ливневки", "Протечки канализации", "Заброшенные промышленные территории"
-                ],
-                noise: [
-                    "Сильный шум возле дорог", "Шум от строительных площадок", "Шум возле промышленных объектов",
-                    "Чрезмерное ночное освещение", "Световое загрязнение парков и природных территорий"
-                ]
+                waste: ["Незаконные свалки", "Переполненные мусорные контейнеры", "Мусор, разбросанный на улицах", "Свалки возле жилых домов", "Свалки в лесопарковых зонах", "Стихийные свалки возле рек", "Неправильная сортировка отходов", "Неработающие пункты переработки", "Строительный мусор на пустырях", "Сжигание мусора"],
+                transport: ["Разбитые дороги", "Ямы на дорогах", "Отсутствие тротуаров", "Разрушенные тротуары", "Отсутствие велодорожек", "Постоянные пробки", "Большое скопление автомобилей", "Незаконные парковки на газонах", "Автомобили на зелёных зонах", "Загрязнение дорог маслами и техническими жидкостями", "Сильная пыль возле крупных дорог"],
+                nature: ["Незаконная вырубка деревьев", "Уничтожение газонов", "Вытоптанные зелёные зоны", "Повреждённые деревья", "Недостаток зелёных насаждений", "Заброшенные парки", "Загрязнённые лесопарковые зоны", "Строительство на месте зелёных территорий", "Сухие или уничтоженные участки растительности"],
+                air: ["Дым от предприятий", "Сильные выбросы с промышленных объектов", "Дым от котельных", "Загрязнение возле ТЭЦ", "Дым от сжигания мусора", "Сильное загрязнение воздуха возле оживлённых магистралей", "Пыль от строительных площадок", "Пыльные участки дорог"],
+                water: ["Загрязнённые реки", "Загрязнённые озёра", "Мусор в реках", "Слив сточных вод", "Загрязнённые арыки", "Загрязнение водоёмов нефтепродуктами", "Несанкционированные сбросы", "Засорённые ливневые стоки"],
+                infrastructure: ["Заброшенные здания", "Разрушенные здания", "Незаконные стройки", "Строительные площадки без ограждения", "Строительный мусор", "Разрушенные канализационные системы", "Засорённые ливневки", "Протечки канализации", "Заброшенные промышленные территории"],
+                noise: ["Сильный шум возле дорог", "Шум от строительных площадок", "Шум возле промышленных объектов", "Чрезмерное ночное освещение", "Световое загрязнение парков и природных территорий"]
             },
             kz: {
-                waste: [
-                    "Заңсыз қоқыс үйінділері", "Толып кеткен қоқыс контейнерлері", "Көшелерде шашылған қоқыс",
-                    "Тұрғын үйлердің жанындағы қоқыс", "Орман-парк аймақтарындағы қоқыс", "Өзендердің маңындағы стихиялық қоқыстар",
-                    "Қалдықтарды дұрыс сұрыптамау", "Жұмыс істемейтін қайта өңдеу пункттері", "Бос жерлердегі құрылыс қоқыстары", "Қоқыс өртеу"
-                ],
-                transport: [
-                    "Бүлінген жолдар", "Жолдардағы шұңқырлар", "Жаяу жүргіншілер жолдарының жоқтығы", "Бұзылған тротуарлар",
-                    "Веложолдардың жоқтығы", "Тұрақты кептелістер", "Көліктердің тым көп шоғырлануы",
-                    "Көгалдарға заңсыз көлік қою", "Жасыл аймақтардағы көліктер", "Жолдардың майлармен және техникалық сұйықтықтармен ластануы", "Ірі жолдар маңындағы қалың шаң"
-                ],
-                nature: [
-                    "Ағаштарды заңсыз кесу", "Көгалдарды жою", "Тапталған жасыл аймақтар",
-                    "Зақымдалған ағаштар", "Жасыл желектердің жетіспеушілігі", "Қаңырап бос қалған саябақтар",
-                    "Ластанған орман-парк аймақтары", "Жасыл аумақтар орнындағы құрылыс", "Өсімдіктердің құрыған немесе жойылған учаскелері"
-                ],
-                air: [
-                    "Кәсіпорындардан шыққан түтін", "Өнеркәсіптік нысандардың қатты шығарындылары", "Қазандықтар түтіні",
-                    "ЖЭО маңындағы ластану", "Қоқыс жағу түтіні", "Қарқынды магистральдар маңындағы ауаның қатты ластануы",
-                    "Құрылыс алаңдарының шаңы", "Жолдардың шаңды учаскелері"
-                ],
-                water: [
-                    "Ластанған өзендер", "Ластанған көлдер", "Өзендердегі қоқыс", "Ағынды суларды төгу",
-                    "Ластанған арықтар", "Су қоймаларының мұнай өнімдерімен ластануы", "Рұқсат етілмеген төгінділер", "Бітелген нөсер кәріздері"
-                ],
-                infrastructure: [
-                    "Қаңырап қалған ғимараттар", "Бұзылған ғимараттар", "Заңсыз құрылыстар", "Қоршаусыз құрылыс алаңдары",
-                    "Құрылыс қоқыстары", "Бұзылған кәріз жүйелері", "Бітелген нөсер кәріздері", "Кәріздің ағуы", "Қаңырап бос қалған өнеркәсіптік аумақтар"
-                ],
-                noise: [
-                    "Жолдар маңындағы қатты шу", "Құрылыс алаңдарынан шығатын шу", "Өнеркәсіптік нысандар маңындағы шу",
-                    "Шамадан тыс түнгі жарықтандыру", "Саябақтар мен табиғи аумақтардың жарықпен ластануы"
-                ]
+                waste: ["Заңсыз қоқыс үйінділері", "Толып кеткен қоқыс контейнерлері", "Көшелерде шашылған қоқыс", "Тұрғын үйлердің жанындағы қоқыс", "Орман-парк аймақтарындағы қоқыс", "Өзендердің маңындағы стихиялы қоқыстар", "Қалдықтарды дұрыс сұрыптамау", "Жұмыс істемейтін қайта өңдеу пункттері", "Бос жерлердегі құрылыс қоқыстары", "Қоқыс өртеу"],
+                transport: ["Бұзылған жолдар", "Жолдардағы шұңқырлар", "Жаяу жүргіншілер жолдарының жоқтығы", "Бұзылған тротуарлар", "Веложолдардың жоқтығы", "Тұрақты кептелістер", "Көліктердің тым көп шоғырлануы", "Көгалдарға заңсыз көлік қою", "Жасыл аймақтардағы көліктер", "Жолдардың майлармен ластануы", "Ірі жолдар маңындағы қалың шаң"],
+                nature: ["Ағаштарды заңсыз кесу", "Көгалдарды жою", "Тапталған жасыл аймақтар", "Зақымдалған ағаштар", "Жасыл желектердің жетіспеушілігі", "Қаңырап бос қалған саябақтар", "Ластанған орман-парк аймақтары", "Жасыл аумақтар орнындағы құрылыс", "Өсімдіктердің құрыған учаскелері"],
+                air: ["Кәсіпорындардан шыққан түтін", "Өнеркәсіптік нысандардың шығарындылары", "Қазандықтар түтіні", "ЖЭО маңындағы ластану", "Қоқыс жағу түтіні", "Магистральдар маңындағы ауаның ластануы", "Құрылыс алаңдарының шаңы", "Жолдардың шаңды учаскелері"],
+                water: ["Ластанған өзендер", "Ластанған көлдер", "Өзендердегі қоқыс", "Ағынды суларды төгу", "Ластанған арықтар", "Су қоймаларының мұнай өнімдерімен ластануы", "Рұқсат етілмеген төгінділер", "Бітелген нөсер кәріздері"],
+                infrastructure: ["Қаңырап қалған ғимараттар", "Бұзылған ғимараттар", "Заңсыз құрылыстар", "Қоршаусыз құрылыс алаңдары", "Құрылыс қоқыстары", "Бұзылған кәріз жүйелері", "Бітелген нөсер кәріздері", "Кәріздің ағуы", "Өнеркәсіптік аумақтар"],
+                noise: ["Жолдар маңындағы қатты шу", "Құрылыс алаңдарынан шығатын шу", "Өнеркәсіптік нысандар маңындағы шу", "Шамадан тыс түнгі жарықтандыру", "Саябақтардың жарықпен ластануы"]
             }
         };
 
@@ -664,7 +744,6 @@
                 }
             });
 
-            // Обновляем переключатель классов кнопок языка
             const ruBtn = document.getElementById('langRuBtn');
             const kzBtn = document.getElementById('langKzBtn');
             if (currentLang === 'kz') {
@@ -675,7 +754,6 @@
                 kzBtn.className = "px-2 py-1 rounded-md transition-all text-slate-500 hover:text-slate-800";
             }
 
-            // Перезаполняем подкатегории если открыта категория
             const categorySelect = document.getElementById("problem-category");
             if (categorySelect.value && categorySelect.value !== 'other') {
                 updateSubcategories(categorySelect.value);
@@ -709,7 +787,6 @@
         let currentUser = null;
         let localReports = JSON.parse(localStorage.getItem('ecomap_reports')) || [];
 
-        // Новые звания и пороги
         const RANK_TIERS = [
             { nameKey: "badge1Name", min: 0, max: 0, nextRankKey: "badge2Name" },
             { nameKey: "badge2Name", min: 1, max: 4, nextRankKey: "badge3Name" },
@@ -773,9 +850,8 @@
         function updateGamificationUI(reportsCount) {
             if (reportsCountText) reportsCountText.innerText = `${reportsCount} ${currentLang === 'kz' ? 'шағым жіберілді' : 'жалоб отправлено'}`;
             const currentTier = getRank(reportsCount);
-            if (profileRankBadge) profileRankBadge.innerText = `${currentTier.nameKey === 'badge1Name' ? '🌱' : currentTier.nameKey === 'badge2Name' ? '🔎' : currentTier.nameKey === 'badge3Name' ? '🌿' : currentTier.nameKey === 'badge4Name' ? '🏙️' : '♻️'} ${t(currentTier.nameKey)}`;
+            if (profileRankBadge) profileRankBadge.innerText = `${currentTier.nameKey === 'badge1Name' ? '🌱' : currentTier.nameKey === 'badge2Name' ? '🔍' : currentTier.nameKey === 'badge3Name' ? '🌿' : currentTier.nameKey === 'badge4Name' ? '🏙️' : '🦸‍♂️'} ${t(currentTier.nameKey)}`;
 
-            // Обновляем визуал карточек достижений
             const badges = [
                 { el: badgeFirst, min: 0 },
                 { el: badgeFive, min: 1 },
@@ -822,7 +898,7 @@
 
         function showLevelUpAlert(newRankKey) {
             if (!levelUpModal) return;
-            const emojiMap = { badge1Name: '🌱', badge2Name: '🔎', badge3Name: '🌿', badge4Name: '🏙️', badge5Name: '♻️' };
+            const emojiMap = { badge1Name: '🌱', badge2Name: '🔍', badge3Name: '🌿', badge4Name: '🏙️', badge5Name: '🦸‍♂️' };
             modalBadge.innerText = emojiMap[newRankKey] || '🎉';
             modalRankName.innerText = t(newRankKey);
             levelUpModal.classList.remove('hidden');
@@ -970,7 +1046,7 @@
                             <p class="text-[11px] text-slate-500 mt-1">${r.desc}</p>
                         </div>
                         <span class="inline-block bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-100">
-                            ${r.status || (currentLang === 'kz' ? "🟡 Жіберілді" : "🟡 Отправлена")}
+                            ${r.status || (currentLang === 'kz' ? "⏳ Жіберілді" : "⏳ Отправлена")}
                         </span>
                     `;
                     userReportsList.appendChild(card);
@@ -1009,6 +1085,7 @@
         menuAuthBtn.addEventListener('click', () => showScreen('auth'));
         menuProfileBtn.addEventListener('click', () => showScreen('profile'));
 
+        // ИНИЦИАЛИЗАЦИЯ КАРТЫ (Центр — Алматы)
         let map = L.map('map', { attributionControl: false }).setView([43.238949, 76.945408], 12);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
@@ -1016,20 +1093,61 @@
         const recyclePointsGroup = L.layerGroup().addTo(map);
         const recycleMarkers = {};
 
-        const recyclePoints = [
-            { id: 1, name: "ECO-Almaty", address: "ул. Байтурсынова, 113", lat: 43.2392, lng: 76.9298 },
-            { id: 2, name: "Пункт сбора батареек", address: "пр. Абая, 44", lat: 43.2412, lng: 76.9192 }
-        ];
+        // Генерация карточек пунктов переработки и добавление меток на карту
+        function renderRecyclePoints() {
+            const container = document.getElementById('recycleList');
+            if (!container) return;
+            container.innerHTML = "";
 
-        recyclePoints.forEach(point => {
-            const greenIcon = L.divIcon({
-                html: `<div class="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center border-2 border-white shadow-lg">♻️</div>`,
-                className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+            recyclePoints.forEach(point => {
+                // Добавляем маркер на карту
+                const greenIcon = L.divIcon({
+                    html: `<div class="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center border-2 border-white shadow-lg">♻️</div>`,
+                    className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+                });
+                const marker = L.marker([point.lat, point.lng], { icon: greenIcon }).addTo(recyclePointsGroup);
+                marker.bindPopup(`
+                    <div class="p-1">
+                        <h4 class="font-bold text-xs text-emerald-700 mb-1">${point.name}</h4>
+                        <p class="text-[11px] text-slate-600">📍 ${point.address}</p>
+                        <p class="text-[10px] text-slate-500 mt-1">♻️ ${point.accepts}</p>
+                    </div>
+                `);
+                recycleMarkers[point.id] = marker;
+
+                // Добавляем карточку в список вкладки
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 border border-slate-100 hover:border-emerald-200 rounded-xl p-4 flex flex-col justify-between transition-all hover:shadow-sm";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <h3 class="font-bold text-sm text-slate-800">${point.id}. ${point.name}</h3>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2 flex items-center gap-1">
+                            <span>📍</span> <strong>${point.address}</strong>
+                        </p>
+                        <p class="text-xs text-slate-600 mb-2">
+                            <span>♻️</span> <strong>Принимают:</strong> ${point.accepts}
+                        </p>
+                        ${point.hours ? `<p class="text-xs text-slate-500 mb-3">🕐 <strong>Режим:</strong> ${point.hours}</p>` : ''}
+                    </div>
+                    <button onclick="focusOnRecyclePoint(${point.id})" class="w-full mt-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/60 font-semibold py-1.5 px-3 rounded-lg text-xs transition-all flex items-center justify-center gap-1.5">
+                        <span>🗺️</span> Показать на карте
+                    </button>
+                `;
+                container.appendChild(card);
             });
-            const marker = L.marker([point.lat, point.lng], { icon: greenIcon }).addTo(recyclePointsGroup);
-            marker.bindPopup(`<b>${point.name}</b><br>${point.address}`);
-            recycleMarkers[point.id] = marker;
-        });
+        }
+
+        // Переход из списка к точке на карте
+        window.focusOnRecyclePoint = function(id) {
+            const point = recyclePoints.find(p => p.id === id);
+            if (point && recycleMarkers[id]) {
+                showScreen('main');
+                map.setView([point.lat, point.lng], 15);
+                recycleMarkers[id].openPopup();
+            }
+        };
 
         // Функция обновления подкатегорий
         function updateSubcategories(selectedCategory) {
@@ -1072,6 +1190,7 @@
             categorySelect.addEventListener("change", function () {
                 updateSubcategories(this.value);
             });
+            renderRecyclePoints();
             applyLanguage();
             checkSession();
         });
@@ -1136,7 +1255,7 @@
 
             let finalCategoryName = categoryVal;
             if (categoryVal === 'other') {
-                finalCategoryName = "🌱 " + (currentLang === 'kz' ? "Басқа: " : "Другое: ") + customVal;
+                finalCategoryName = "⚠️ " + (currentLang === 'kz' ? "Басқа: " : "Другое: ") + customVal;
             } else if (subcategoryVal) {
                 finalCategoryName = subcategoryVal;
             }
@@ -1167,7 +1286,7 @@
                 coords: tempCoords,
                 category: finalCategoryName,
                 desc: description,
-                status: currentLang === 'kz' ? "🟡 Қабылданды" : "🟡 Получено",
+                status: currentLang === 'kz' ? "⏳ Қабылданды" : "⏳ Получено",
                 photoUrl: selectedPhotoUrl,
                 created_at: new Date().toISOString()
             };
@@ -1180,7 +1299,7 @@
                         desc: description,
                         lat: tempCoords[0],
                         lng: tempCoords[1],
-                        status: currentLang === 'kz' ? "🟡 Қабылданды" : "🟡 Получено",
+                        status: currentLang === 'kz' ? "⏳ Қабылданды" : "⏳ Получено",
                         photo_url: selectedPhotoUrl
                     }]);
                 } catch (err) {
@@ -1192,7 +1311,7 @@
             }
 
             const redIcon = L.divIcon({
-                html: `<div class="w-7 h-7 bg-rose-500 text-white rounded-full flex items-center justify-center border-2 border-white shadow-lg animate-bounce">⚠️</div>`,
+                html: `<div class="w-7 h-7 bg-rose-500 text-white rounded-full flex items-center justify-center border-2 border-white shadow-lg animate-bounce">📍</div>`,
                 className: '', iconSize: [28, 28], iconAnchor: [14, 14]
             });
             L.marker(tempCoords, { icon: redIcon }).addTo(userReportsGroup).bindPopup(`<b>${finalCategoryName}</b><br>${description}`);
