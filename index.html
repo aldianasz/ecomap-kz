@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" class="h-full">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,8 +12,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         html, body {
-            height: 100%;
-            overflow: hidden;
+            height: auto;
+            overflow-y: auto;
+            scroll-behavior: smooth;
             background-color: #f8fafc;
         }
         #map {
@@ -23,10 +24,10 @@
             display: block;
         }
         .fade-in {
-            animation: fadeIn 0.3s ease-out forwards;
+            animation: fadeIn 0.5s ease-out forwards;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes scan {
@@ -38,14 +39,14 @@
             animation: scan 2s linear infinite;
         }
         .leaflet-popup-content-wrapper {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(8px);
             border-radius: 12px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(226, 232, 240, 0.8);
         }
         .leaflet-popup-tip {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.9);
         }
         @keyframes celebrate {
             0%, 100% { transform: scale(1); }
@@ -56,7 +57,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased relative flex flex-col h-full overflow-hidden">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased relative">
 
     <!-- МОДАЛКА НОВОГО ЗВАНИЯ -->
     <div id="levelUpModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[99999] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
@@ -74,7 +75,7 @@
     </div>
 
     <!-- Шапка сайта -->
-    <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 md:px-6 shrink-0 z-[2000]">
+    <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 md:px-6 sticky top-0 z-[2000]">
         <button id="logoBtn" class="flex items-center gap-2 hover:opacity-80 transition-all focus:outline-none group">
             <span class="text-xl md:text-2xl group-hover:scale-110 transition-transform">🌍</span>
             <h1 class="text-lg md:text-xl font-bold tracking-wider text-emerald-600">EcoMap KZ</h1>
@@ -166,8 +167,8 @@
     </div>
 
     <!-- ЭКРАН 1: ГЛАВНАЯ СТРАНИЦА (КАРТА + ФОРМА) -->
-    <div id="mainSection" class="flex flex-col w-full flex-1 min-h-0 overflow-y-auto fade-in">
-        <div class="w-full h-[50vh] md:h-[55vh] shrink-0 relative z-10 shadow-sm border-b border-slate-100">
+    <div id="mainSection" class="flex flex-col w-full min-h-screen fade-in">
+        <div class="w-full h-[60vh] md:h-[65vh] relative z-10 shadow-sm border-b border-slate-100">
             <div class="absolute top-4 left-4 right-4 md:left-6 md:right-auto md:w-96 z-[1000] bg-white/90 backdrop-blur-md p-1.5 rounded-xl border border-slate-200/80 shadow-lg flex items-center gap-2">
                 <input type="text" id="searchInput" placeholder="Введите адрес в Алматы..." data-i18n-placeholder="searchPlaceholder" class="flex-1 bg-transparent px-3 py-1.5 text-xs text-slate-700 focus:outline-none placeholder-slate-400" />
                 <button id="searchBtn" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold transition-all" data-i18n="searchBtn">
@@ -267,7 +268,7 @@
     </div>
 
     <!-- ЭКРАН 2: РЕГИСТРАЦИЯ / ВХОД -->
-    <div id="authSection" class="hidden w-full max-w-md mx-auto px-4 py-12 flex-1 min-h-0 overflow-y-auto fade-in">
+    <div id="authSection" class="hidden w-full max-w-md mx-auto px-4 py-12 min-h-[calc(100vh-64px)] fade-in">
         <div class="bg-white border border-slate-100 rounded-2xl p-6 md:p-8 shadow-lg">
             <h2 class="text-xl font-bold text-slate-800 mb-2 text-center" id="authTitle" data-i18n="authTitleLogin">Войти в аккаунт</h2>
             <p class="text-xs text-slate-400 text-center mb-6" id="authSubtitle" data-i18n="authSubtitleLogin">Получите доступ к отправке жалоб и личному профилю</p>
@@ -302,7 +303,7 @@
     </div>
 
     <!-- ЭКРАН 3: ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ -->
-    <div id="profileSection" class="hidden w-full max-w-3xl mx-auto px-4 py-12 flex-1 min-h-0 overflow-y-auto fade-in">
+    <div id="profileSection" class="hidden w-full max-w-3xl mx-auto px-4 py-12 min-h-[calc(100vh-64px)] fade-in">
         <div class="bg-white border border-slate-100 rounded-2xl p-6 md:p-8 shadow-lg flex flex-col gap-8">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100">
                 <div class="flex items-center gap-4">
@@ -380,7 +381,7 @@
     </div>
 
     <!-- СТРАНИЦА "КТО МЫ" -->
-    <div id="aboutSection" class="hidden w-full max-w-3xl mx-auto px-4 py-12 flex-1 min-h-0 overflow-y-auto fade-in">
+    <div id="aboutSection" class="hidden w-full max-w-3xl mx-auto px-4 py-12 min-h-[calc(100vh-64px)] fade-in">
         <div class="bg-white border border-slate-100 rounded-2xl p-6 md:p-10 shadow-lg">
             <h2 class="text-2xl md:text-3xl font-bold text-emerald-600 mb-6 flex items-center gap-2">
                 <span>👥</span> <span data-i18n="aboutHeader">Кто мы?</span>
@@ -389,15 +390,12 @@
                 <p data-i18n="aboutText1">
                     <strong>EcoMap KZ</strong> — это команда людей, которым небезразлично будущее окружающей среды Казахстана. Мы объединены одной целью — сделать нашу страну чище, безопаснее и экологичнее.
                 </p>
-                <p data-i18n="aboutText2">
-                    Наш проект позволяет каждому гражданину внести свой вклад в улучшение экологической обстановки: сообщать о стихийных свалках, нарушениях и проблемах экологии своего города.
-                </p>
             </div>
         </div>
     </div>
 
     <!-- СТРАНИЦА "ПУНКТЫ ПЕРЕРАБОТКИ" -->
-    <div id="recycleSection" class="hidden w-full max-w-4xl mx-auto px-4 py-12 flex-1 min-h-0 overflow-y-auto fade-in">
+    <div id="recycleSection" class="hidden w-full max-w-4xl mx-auto px-4 py-12 min-h-[calc(100vh-64px)] fade-in">
         <div class="bg-white border border-slate-100 rounded-2xl p-6 md:p-8 shadow-lg">
             <h2 class="text-2xl font-bold text-emerald-600 mb-6 flex items-center gap-2">
                 <span>♻️</span> <span data-i18n="recycleHeader">Пункты приема и переработки отходов</span>
@@ -409,11 +407,6 @@
     <!-- Загрузка библиотеки Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // ИНИЦИАЛИЗАЦИЯ SUPABASE CLIENT
-        const SUPABASE_URL = "https://your-supabase-url.supabase.co"; 
-        const SUPABASE_KEY = "your-anon-key";
-        const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-
         // --- СИСТЕМА ЛОКАЛИЗАЦИИ (РУССКИЙ И КАЗАХСКИЙ) ---
         const translations = {
             ru: {
@@ -462,7 +455,7 @@
                 authTitleLogin: "Войти в аккаунт",
                 authSubtitleLogin: "Получите доступ к отправке жалоб и личному профилю",
                 authTitleReg: "Создать аккаунт",
-                authSubtitleReg: "Присоединяйтесь к эко-сообществу Казахстана",
+                authSubtitleReg: "Создайте профиль для отправки экологических отчетов",
                 labelNickname: "Уникальный никнейм",
                 labelEmail: "Электронная почта",
                 labelPassword: "Пароль",
@@ -487,33 +480,37 @@
                 noReportsText: "У вас пока нет отправленных жалоб.",
                 aboutHeader: "Кто мы?",
                 aboutText1: "EcoMap KZ — это команда людей, которым небезразлично будущее окружающей среды Казахстана. Мы объединены одной целью — сделать нашу страну чище, безопаснее и экологичнее.",
-                aboutText2: "Наш проект позволяет каждому гражданину внести свой вклад в улучшение экологической обстановки: сообщать о стихийных свалках, нарушениях и проблемах экологии своего города.",
                 recycleHeader: "Пункты приема и переработки отходов",
                 modalNewRankTitle: "Новое звание! 🎉",
                 modalNewRankSubtitle: "Ваш вклад делает Казахстан чище. Поздравляем с достижением уровня:",
-                modalContinueBtn: "Ура, продолжить!"
+                modalContinueBtn: "Ура, продолжить!",
+                alertLoginFirst: "Пожалуйста, сначала войдите в свой аккаунт!",
+                alertSelectPoint: "Пожалуйста, выберите точку на карте!",
+                alertAiWait: "Дождитесь окончания проверки ИИ!",
+                alertSuccessReport: "Ваше обращение успешно добавлено!",
+                alertRegSuccess: "Регистрация успешна!"
             },
             kz: {
-                searchPlaceholder: "Алматыдағы мекенжайды енгізіңіз...",
-                searchBtn: "Издеу",
-                formTitle: "Мәселені хабарлау",
-                formSubtitle: "Картада нүктені таңдап, формулярды толтырыңыз. Авторизация қажет.",
+                searchPlaceholder: "Алматы қаласынан мекенжай енгізіңіз...",
+                searchBtn: "Іздеу",
+                formTitle: "Мәселе туралы хабарлау",
+                formSubtitle: "Картадан нүкте таңдап, пішінді толтырыңыз. Авторизация қажет.",
                 labelCategory: "Негізгі санат",
                 catDefault: "Санатты таңдаңыз...",
-                catWaste: "🗑️ Қоқыс және қалдықтар",
+                catWaste: "🗑️ Қоқыс пен қалдықтар",
                 catTransport: "🚗 Жолдар мен көлік",
-                catNature: "🌳 Табиғат және жасыл аймақтар",
+                catNature: "🌳 Табиғат пен жасыл аймақтар",
                 catAir: "💨 Ауаның ластануы",
                 catWater: "💧 Судың ластануы",
-                catInfra: "🏗️ Қалалық инфрақұрылым мен құрылыстар",
-                catNoise: "🔊 Шум мен жарық ластануы",
+                catInfra: "🏗️ Қалалық инфрақұрылым және құрылыс",
+                catNoise: "🔊 Шу және жарық ластануы",
                 catOther: "🌱 Басқа экологиялық мәселелер",
                 labelSubcategory: "Ішкі санат",
                 subcatDefault: "Ішкі санатты таңдаңыз...",
                 labelCustomDesc: "Мәселені өз сөзіңізбен сипаттаңыз",
-                customDescPlaceholder: "Мәселенің сипаттамасын енгізіңіз...",
+                customDescPlaceholder: "Мәселе сипаттамасын енгізіңіз...",
                 labelDetails: "Қосымша мәліметтер",
-                detailsPlaceholder: "Ластану егжей-тегжейлерін сипаттаңыз...",
+                detailsPlaceholder: "Ластану бөлшектерін сипаттаңыз...",
                 labelPhoto: "Фотосурет",
                 uploadText: "Фото файлын таңдау",
                 aiAnalyzing: "ЖИ талдауда... 🤖",
@@ -521,26 +518,26 @@
                 uploadSuccess: "Сәтті!",
                 submitBtn: "Өтінішті жіберу",
                 ratingTitle: "Аудандар рейтингі (EcoScore)",
-                districtMedeu: "Медеу ауданы",
-                districtBostandyk: "Бостандық ауданы",
-                districtAlmaly: "Алмалы ауданы",
+                districtMedeu: "Медеу",
+                districtBostandyk: "Бостандық",
+                districtAlmaly: "Алматы",
                 menuNavTitle: "Навигация",
                 menuReport: "Шағым түсіру",
-                menuReportSub: "Карта мен өтініш формасы",
+                menuReportSub: "Карта және өтініштер формасы",
                 menuAbout: "Біз кімбіз?",
-                menuAboutSub: "Жоба және миссиямыз туралы",
+                menuAboutSub: "Жоба және біздің миссиямыз",
                 menuRecycle: "Қайта өңдеу пункттері",
-                menuRecycleSub: "Шикізат қабылдау нүктелері",
+                menuRecycleSub: "Екінші шикізат қабылдау нүктелері",
                 menuProfileTitle: "Профиль",
                 menuAuth: "Кіру / Тіркелу",
-                menuAuthSub: "EcoMap аккаунтын құрыңыз",
-                menuProfileSub: "Прогресс пен атақтарыңызды қарау",
-                menuSocials: "Бiздiң әлеуметтiк желiлер",
+                menuAuthSub: "EcoMap аккаунтын жасаңыз",
+                menuProfileSub: "Прогресс пен атақтарды қарау",
+                menuSocials: "Біздің әлеуметтік желілер",
                 authTitleLogin: "Аккаунтқа кіру",
-                authSubtitleLogin: "Шағымдар жіберуге және жеке профильге қол жеткізіңіз",
-                authTitleReg: "Тіркелу",
-                authSubtitleReg: "Қазақстанның эко-қоғамдастығына қосылыңыз",
-                labelNickname: "Бірегей никнейм",
+                authSubtitleLogin: "Шағымдар жіберу және жеке профильге қол жеткізу",
+                authTitleReg: "Аккаунт құру",
+                authSubtitleReg: "Экологиялық есептер жіберу үшін профиль жасаңыз",
+                labelNickname: "Бірегей лақап ат (никнейм)",
                 labelEmail: "Электрондық пошта",
                 labelPassword: "Құпия сөз",
                 authBtnLogin: "Кіру",
@@ -548,346 +545,677 @@
                 authToggleToReg: "Аккаунтыңыз жоқ па? Тіркелу",
                 authToggleToLogin: "Аккаунтыңыз бар ма? Кіру",
                 logoutBtn: "Аккаунттан шығу",
-                rankProgressTitle: "Атақ прогресі",
+                rankProgressTitle: "Атақ прогресссі",
                 achievementsTitle: "Экологиялық жетістіктер жинағы",
-                badge1Name: "Алғашқы қадам",
-                badge1Desc: "Алғашқы жіберілген мәселе",
+                badge1Name: "Бірінші қадам",
+                badge1Desc: "Бірінші жіберілген мәселе",
                 badge2Name: "Бақылаушы",
                 badge2Desc: "Бірнеше расталған хабарлама",
                 badge3Name: "Табиғат қорғаушысы",
                 badge3Desc: "5 шағым",
-                badge4Name: "Қала белсендісі",
+                badge4Name: "Қалалық белсенді",
                 badge4Desc: "10 шағым",
                 badge5Name: "Эко-батыр",
-                badge5Desc: "15 және одан да көп шағымдар",
-                myReportsTitle: "Менің жіберген шағымдарым",
-                noReportsText: "Сізде әлі жіберілген шағымдар жок.",
+                badge5Desc: "15 және одан көп шағым",
+                myReportsTitle: "Менің жіберілген шағымдарым",
+                noReportsText: "Әзірге жіберілген шағымдарыңыз жоқ.",
                 aboutHeader: "Біз кімбіз?",
-                aboutText1: "EcoMap KZ — Қазақстанның қоршаған ортасының болашағына бей-жай қарамайтын адамдар тобы. Біз бір мақсатқа біріктірілгенбіз — елімізді таза, қауіпсіз және экологиялық таза ету.",
-                aboutText2: "Бұл жоба әрбір азаматқа экологиялық жағдайды жақсартуға өз үлесін қосуға мүмкіндік береді.",
+                aboutText1: "EcoMap KZ — Қазақстанның қоршаған ортасының болашағына бей-жай қарамайтын адамдар командасы. Біз елімізді таза, қауіпсіз және экологиялық таза ету мақсатымен біріктік.",
                 recycleHeader: "Қалдықтарды қабылдау және қайта өңдеу пункттері",
                 modalNewRankTitle: "Жаңа атақ! 🎉",
-                modalNewRankSubtitle: "Сіздің үлесіңіз Қазақстанды таза етеді. Дәрежеңізбен құттықтаймыз:",
-                modalContinueBtn: "Жалғастыру!"
+                modalNewRankSubtitle: "Сіздің үлесіңіз Қазақстанды таза етеді. Келесі деңгейге жетуіңізбен құттықтаймыз:",
+                modalContinueBtn: "Жалғастыру!",
+                alertLoginFirst: "Алдымен аккаунтыңызға кіріңіз!",
+                alertSelectPoint: "Картадан нүкте таңдаңыз!",
+                alertAiWait: "ЖИ тексеруі аяқталғанын күтіңіз!",
+                alertSuccessReport: "Өтінішіңіз сәтті қосылды!",
+                alertRegSuccess: "Тіркеу сәтті өтті!"
             }
         };
 
         const subcategoriesData = {
-            waste: [
-                { val: "unauthorized_dump", ru: "Несанкционированная свалка", kz: "Заңсыз қоқыс орны" },
-                { val: "overflowing_bins", ru: "Переполненные контейнеры", kz: "Толып кеткен контейнерлер" },
-                { val: "construction_waste", ru: "Строительный мусор", kz: "Құрылыс қоқысы" },
-                { val: "hazardous_waste", ru: "Опасные отходы (батарейки, химикаты)", kz: "Қауіпті қалдықтар" }
-            ],
-            transport: [
-                { val: "pothole", ru: "Ямы на дорогах", kz: "Жолдағы шұңқырлар" },
-                { val: "broken_sign", ru: "Поврежденные дорожные знаки", kz: "Зақымдалған жол белгілері" },
-                { val: "abandoned_car", ru: "Заброшенные автомобили", kz: "Тасталған автокөліктер" }
-            ],
-            nature: [
-                { val: "illegal_tree_cutting", ru: "Незаконная вырубка деревьев", kz: "Заңсыз ағаш кесу" },
-                { val: "dry_trees", ru: "Аварийные и сухие деревья", kz: "Апаттық және құрғақ ағаштар" },
-                { val: "damaged_park", ru: "Повреждение парковой зоны", kz: "Саябақ аймағының зақымдалуы" }
-            ],
-            air: [
-                { val: "smog_smoke", ru: "Густой дым / Гарь", kz: "Қалың түтін / Күйік иісі" },
-                { val: "industrial_emissions", ru: "Промышленные выбросы", kz: "Өнеркәсіптік шығарындылар" }
-            ],
-            water: [
-                { val: "river_pollution", ru: "Загрязнение водоемов / рек", kz: "Су қоймаларының / өзендердің ластануы" },
-                { val: "sewage_leak", ru: "Утечка канализации", kz: "Канализацияның ағуы" }
-            ],
-            infrastructure: [
-                { val: "broken_lighting", ru: "Неработающее освещение", kz: "Жұмыс істемейтін жарықтандыру" },
-                { val: "open_manhole", ru: "Открытые люки", kz: "Ашық люктер" }
-            ],
-            noise: [
-                { val: "night_construction", ru: "Ночные строительные работы", kz: "Түнгі құрылыс жұмыстары" },
-                { val: "excessive_noise", ru: "Превышение уровня шума", kz: "Шу деңгейінің артуы" }
-            ]
-        };
-
-        const recyclePointsData = [
-            { name: "Tazalyq Recyclers", address: "ул. Абай 150, Алматы", types: ["Пластик", "Макулатура", "Стекло"] },
-            { name: "EcoGreen Point", address: "пр. Достык 89, Алматы", types: ["Батарейки", "Электроника"] },
-            { name: "Kazakhstan Paper Recycling", address: "ул. Рыскулова 52, Алматы", types: ["Картон", "Бумага"] }
-        ];
-
-        let currentLang = 'ru';
-        let currentUser = null;
-        let selectedLocation = null;
-        let tempMarker = null;
-
-        // UI ЭЛЕМЕНТЫ
-        const elements = {
-            langRuBtn: document.getElementById('langRuBtn'),
-            langKzBtn: document.getElementById('langKzBtn'),
-            logoBtn: document.getElementById('logoBtn'),
-            drawerOverlay: document.getElementById('drawerOverlay'),
-            sideDrawer: document.getElementById('sideDrawer'),
-            closeDrawerBtn: document.getElementById('closeDrawerBtn'),
-            menuReportBtn: document.getElementById('menuReportBtn'),
-            menuAboutBtn: document.getElementById('menuAboutBtn'),
-            menuRecycleBtn: document.getElementById('menuRecycleBtn'),
-            menuAuthBtn: document.getElementById('menuAuthBtn'),
-            menuProfileBtn: document.getElementById('menuProfileBtn'),
-            menuUsernameText: document.getElementById('menuUsernameText'),
-            mainSection: document.getElementById('mainSection'),
-            authSection: document.getElementById('authSection'),
-            profileSection: document.getElementById('profileSection'),
-            aboutSection: document.getElementById('aboutSection'),
-            recycleSection: document.getElementById('recycleSection'),
-            authForm: document.getElementById('authForm'),
-            authTitle: document.getElementById('authTitle'),
-            authSubtitle: document.getElementById('authSubtitle'),
-            nicknameGroup: document.getElementById('nicknameGroup'),
-            authNickname: document.getElementById('authNickname'),
-            authEmail: document.getElementById('authEmail'),
-            authPassword: document.getElementById('authPassword'),
-            authSubmitBtn: document.getElementById('authSubmitBtn'),
-            toggleAuthModeBtn: document.getElementById('toggleAuthModeBtn'),
-            logoutBtn: document.getElementById('logoutBtn'),
-            categorySelect: document.getElementById('problem-category'),
-            subcategoryContainer: document.getElementById('subcategory-container'),
-            subcategorySelect: document.getElementById('problem-subcategory'),
-            otherContainer: document.getElementById('other-problem-container'),
-            photoInput: document.getElementById('photoInput'),
-            previewContainer: document.getElementById('previewContainer'),
-            imagePreview: document.getElementById('imagePreview'),
-            aiStatusText: document.getElementById('aiStatusText'),
-            aiStatusBg: document.getElementById('aiStatusBg'),
-            aiScanner: document.getElementById('aiScanner'),
-            ecoForm: document.getElementById('ecoForm'),
-            recycleList: document.getElementById('recycleList'),
-            levelUpModal: document.getElementById('levelUpModal'),
-            closeModalBtn: document.getElementById('closeModalBtn')
-        };
-
-        // ПЕРЕКЛЮЧЕНИЕ ЯЗЫКОВ
-        function setLanguage(lang) {
-            currentLang = lang;
-            if (lang === 'ru') {
-                elements.langRuBtn.className = "px-2 py-1 rounded-md transition-all bg-white text-slate-800 shadow-sm";
-                elements.langKzBtn.className = "px-2 py-1 rounded-md transition-all text-slate-500 hover:text-slate-800";
-            } else {
-                elements.langKzBtn.className = "px-2 py-1 rounded-md transition-all bg-white text-slate-800 shadow-sm";
-                elements.langRuBtn.className = "px-2 py-1 rounded-md transition-all text-slate-500 hover:text-slate-800";
+            ru: {
+                waste: [
+                    "Незаконные свалки", "Переполненные мусорные контейнеры", "Мусор, разбросанный на улицах",
+                    "Свалки возле жилых домов", "Свалки в лесопарковых зонах", "Стихийные свалки возле рек",
+                    "Неправильная сортировка отходов", "Неработающие пункты переработки", "Строительный мусор на пустырях", "Сжигание мусора"
+                ],
+                transport: [
+                    "Разбитые дороги", "Ямы на дорогах", "Отсутствие тротуаров", "Разрушенные тротуары",
+                    "Отсутствие велодорожек", "Постоянные пробки", "Большое скопление автомобилей",
+                    "Незаконные парковки на газонах", "Автомобили на зелёных зонах", "Загрязнение дорог маслами и техническими жидкостями", "Сильная пыль возле крупных дорог"
+                ],
+                nature: [
+                    "Незаконная вырубка деревьев", "Уничтожение газонов", "Вытоптанные зелёные зоны",
+                    "Повреждённые деревья", "Недостаток зелёных насаждений", "Заброшенные парки",
+                    "Загрязнённые лесопарковые зоны", "Строительство на месте зелёных территорий", "Сухие или уничтоженные участки растительности"
+                ],
+                air: [
+                    "Дым от предприятий", "Сильные выбросы с промышленных объектов", "Дым от котельных",
+                    "Загрязнение возле ТЭЦ", "Дым от сжигания мусора", "Сильное загрязнение воздуха возле оживлённых магистралей",
+                    "Пыль от строительных площадок", "Пыльные участки дорог"
+                ],
+                water: [
+                    "Загрязнённые реки", "Загрязнённые озёра", "Мусор в реках", "Слив сточных вод",
+                    "Загрязнённые арыки", "Загрязнение водоёмов нефтепродуктами", "Несанкционированные сбросы", "Засорённые ливневые стоки"
+                ],
+                infrastructure: [
+                    "Заброшенные здания", "Разрушенные здания", "Незаконные стройки", "Строительные площадки без ограждения",
+                    "Строительный мусор", "Разрушенные канализационные системы", "Засорённые ливневки", "Протечки канализации", "Заброшенные промышленные территории"
+                ],
+                noise: [
+                    "Сильный шум возле дорог", "Шум от строительных площадок", "Шум возле промышленных объектов",
+                    "Чрезмерное ночное освещение", "Световое загрязнение парков и природных территорий"
+                ]
+            },
+            kz: {
+                waste: [
+                    "Заңсыз қоқыс үйінділері", "Толып кеткен қоқыс контейнерлері", "Көшелерде шашылған қоқыс",
+                    "Тұрғын үйлердің жанындағы қоқыс", "Орман-парк аймақтарындағы қоқыс", "Өзендердің маңындағы стихиялық қоқыстар",
+                    "Қалдықтарды дұрыс сұрыптамау", "Жұмыс істемейтін қайта өңдеу пункттері", "Бос жерлердегі құрылыс қоқыстары", "Қоқыс өртеу"
+                ],
+                transport: [
+                    "Бүлінген жолдар", "Жолдардағы шұңқырлар", "Жаяу жүргіншілер жолдарының жоқтығы", "Бұзылған тротуарлар",
+                    "Веложолдардың жоқтығы", "Тұрақты кептелістер", "Көліктердің тым көп шоғырлануы",
+                    "Көгалдарға заңсыз көлік қою", "Жасыл аймақтардағы көліктер", "Жолдардың майлармен және техникалық сұйықтықтармен ластануы", "Ірі жолдар маңындағы қалың шаң"
+                ],
+                nature: [
+                    "Ағаштарды заңсыз кесу", "Көгалдарды жою", "Тапталған жасыл аймақтар",
+                    "Зақымдалған ағаштар", "Жасыл желектердің жетіспеушілігі", "Қаңырап бос қалған саябақтар",
+                    "Ластанған орман-парк аймақтары", "Жасыл аумақтар орнындағы құрылыс", "Өсімдіктердің құрыған немесе жойылған учаскелері"
+                ],
+                air: [
+                    "Кәсіпорындардан шыққан түтін", "Өнеркәсіптік нысандардың қатты шығарындылары", "Қазандықтар түтіні",
+                    "ЖЭО маңындағы ластану", "Қоқыс жағу түтіні", "Қарқынды магистральдар маңындағы ауаның қатты ластануы",
+                    "Құрылыс алаңдарының шаңы", "Жолдардың шаңды учаскелері"
+                ],
+                water: [
+                    "Ластанған өзендер", "Ластанған көлдер", "Өзендердегі қоқыс", "Ағынды суларды төгу",
+                    "Ластанған арықтар", "Су қоймаларының мұнай өнімдерімен ластануы", "Рұқсат етілмеген төгінділер", "Бітелген нөсер кәріздері"
+                ],
+                infrastructure: [
+                    "Қаңырап қалған ғимараттар", "Бұзылған ғимараттар", "Заңсыз құрылыстар", "Қоршаусыз құрылыс алаңдары",
+                    "Құрылыс қоқыстары", "Бұзылған кәріз жүйелері", "Бітелген нөсер кәріздері", "Кәріздің ағуы", "Қаңырап бос қалған өнеркәсіптік аумақтар"
+                ],
+                noise: [
+                    "Жолдар маңындағы қатты шу", "Құрылыс алаңдарынан шығатын шу", "Өнеркәсіптік нысандар маңындағы шу",
+                    "Шамадан тыс түнгі жарықтандыру", "Саябақтар мен табиғи аумақтардың жарықпен ластануы"
+                ]
             }
+        };
 
+        let currentLang = localStorage.getItem('ecomap_lang') || 'ru';
+
+        function t(key) {
+            return translations[currentLang][key] || translations['ru'][key] || key;
+        }
+
+        function applyLanguage() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    el.innerText = translations[lang][key];
+                if (translations[currentLang][key]) {
+                    el.innerText = translations[currentLang][key];
                 }
             });
-
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
-                if (translations[lang][key]) {
-                    el.placeholder = translations[lang][key];
+                if (translations[currentLang][key]) {
+                    el.setAttribute('placeholder', translations[currentLang][key]);
                 }
             });
 
-            updateSubcategoryDropdown();
-            renderRecyclePoints();
-        }
-
-        elements.langRuBtn.addEventListener('click', () => setLanguage('ru'));
-        elements.langKzBtn.addEventListener('click', () => setLanguage('kz'));
-
-        // УПРАВЛЕНИЕ МЕНЮ (DRAWER)
-        function toggleDrawer(open) {
-            if (open) {
-                elements.drawerOverlay.classList.remove('pointer-events-none', 'opacity-0');
-                elements.drawerOverlay.classList.add('opacity-100');
-                elements.sideDrawer.classList.remove('-translate-x-full');
+            // Обновляем переключатель классов кнопок языка
+            const ruBtn = document.getElementById('langRuBtn');
+            const kzBtn = document.getElementById('langKzBtn');
+            if (currentLang === 'kz') {
+                kzBtn.className = "px-2 py-1 rounded-md transition-all bg-white text-slate-800 shadow-sm";
+                ruBtn.className = "px-2 py-1 rounded-md transition-all text-slate-500 hover:text-slate-800";
             } else {
-                elements.drawerOverlay.classList.remove('opacity-100');
-                elements.drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
-                elements.sideDrawer.classList.add('-translate-x-full');
+                ruBtn.className = "px-2 py-1 rounded-md transition-all bg-white text-slate-800 shadow-sm";
+                kzBtn.className = "px-2 py-1 rounded-md transition-all text-slate-500 hover:text-slate-800";
+            }
+
+            // Перезаполняем подкатегории если открыта категория
+            const categorySelect = document.getElementById("problem-category");
+            if (categorySelect.value && categorySelect.value !== 'other') {
+                updateSubcategories(categorySelect.value);
             }
         }
 
-        elements.logoBtn.addEventListener('click', () => toggleDrawer(true));
-        elements.closeDrawerBtn.addEventListener('click', () => toggleDrawer(false));
-        elements.drawerOverlay.addEventListener('click', () => toggleDrawer(false));
-
-        // НАВИГАЦИЯ ПО СТРАНИЦАМ
-        function showSection(section) {
-            [elements.mainSection, elements.authSection, elements.profileSection, elements.aboutSection, elements.recycleSection].forEach(s => s.classList.add('hidden'));
-            section.classList.remove('hidden');
-            toggleDrawer(false);
-            if (section === elements.mainSection && map) {
-                setTimeout(() => map.invalidateSize(), 200);
-            }
-        }
-
-        elements.menuReportBtn.addEventListener('click', () => showSection(elements.mainSection));
-        elements.menuAboutBtn.addEventListener('click', () => showSection(elements.aboutSection));
-        elements.menuRecycleBtn.addEventListener('click', () => showSection(elements.recycleSection));
-        elements.menuAuthBtn.addEventListener('click', () => showSection(elements.authSection));
-        elements.menuProfileBtn.addEventListener('click', () => showSection(elements.profileSection));
-
-        // ИНИЦИАЛИЗАЦИЯ КАРТЫ
-        const map = L.map('map').setView([43.238949, 76.889709], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        map.on('click', (e) => {
-            selectedLocation = e.latlng;
-            if (tempMarker) map.removeLayer(tempMarker);
-            tempMarker = L.marker(selectedLocation).addTo(map)
-                .bindPopup(currentLang === 'ru' ? 'Выбранная точка' : 'Тандалған нүкте')
-                .openPopup();
+        document.getElementById('langRuBtn').addEventListener('click', () => {
+            currentLang = 'ru';
+            localStorage.setItem('ecomap_lang', 'ru');
+            applyLanguage();
         });
 
-        // ДИНАМИЧЕСКИЕ ПОДКатегории
-        function updateSubcategoryDropdown() {
-            const cat = elements.categorySelect.value;
-            elements.subcategorySelect.innerHTML = `<option value="" disabled selected>${translations[currentLang].subcatDefault}</option>`;
-            
-            if (cat === 'other') {
-                elements.subcategoryContainer.style.display = 'none';
-                elements.otherContainer.style.display = 'block';
-            } else if (subcategoriesData[cat]) {
-                elements.otherContainer.style.display = 'none';
-                elements.subcategoryContainer.style.display = 'block';
-                subcategoriesData[cat].forEach(sub => {
-                    const opt = document.createElement('option');
-                    opt.value = sub.val;
-                    opt.innerText = sub[currentLang];
-                    elements.subcategorySelect.appendChild(opt);
-                });
+        document.getElementById('langKzBtn').addEventListener('click', () => {
+            currentLang = 'kz';
+            localStorage.setItem('ecomap_lang', 'kz');
+            applyLanguage();
+        });
+
+        const SUPABASE_URL = "https://your-project-id.supabase.co"; 
+        const SUPABASE_ANON_KEY = "your-anon-key";
+        
+        let supabaseClient = null;
+        try {
+            if (typeof supabase !== 'undefined' && SUPABASE_URL !== "https://your-project-id.supabase.co" && SUPABASE_URL !== "") {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        let currentUser = null;
+        let localReports = JSON.parse(localStorage.getItem('ecomap_reports')) || [];
+
+        // Новые звания и пороги
+        const RANK_TIERS = [
+            { nameKey: "badge1Name", min: 0, max: 0, nextRankKey: "badge2Name" },
+            { nameKey: "badge2Name", min: 1, max: 4, nextRankKey: "badge3Name" },
+            { nameKey: "badge3Name", min: 5, max: 9, nextRankKey: "badge4Name" },
+            { nameKey: "badge4Name", min: 10, max: 14, nextRankKey: "badge5Name" },
+            { nameKey: "badge5Name", min: 15, max: Infinity, nextRankKey: null }
+        ];
+
+        const levelUpModal = document.getElementById('levelUpModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalBadge = document.getElementById('modalBadge');
+        const modalRankName = document.getElementById('modalRankName');
+        const profileRankBadge = document.getElementById('profileRankBadge');
+        const reportsCountText = document.getElementById('reportsCountText');
+        const progressFill = document.getElementById('progressFill');
+        const nextRankProgressText = document.getElementById('nextRankProgressText');
+        
+        const badgeFirst = document.getElementById('badge-first');
+        const badgeFive = document.getElementById('badge-five');
+        const badgeTen = document.getElementById('badge-ten');
+        const badgeFifteen = document.getElementById('badge-fifteen');
+        const badgeHero = document.getElementById('badge-hero');
+
+        const logoBtn = document.getElementById('logoBtn');
+        const sideDrawer = document.getElementById('sideDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+        const menuReportBtn = document.getElementById('menuReportBtn');
+        const menuAboutBtn = document.getElementById('menuAboutBtn');
+        const menuRecycleBtn = document.getElementById('menuRecycleBtn');
+        const menuAuthBtn = document.getElementById('menuAuthBtn');
+        const menuProfileBtn = document.getElementById('menuProfileBtn');
+        const menuUsernameText = document.getElementById('menuUsernameText');
+        
+        const mainSection = document.getElementById('mainSection');
+        const authSection = document.getElementById('authSection');
+        const profileSection = document.getElementById('profileSection');
+        const recycleSection = document.getElementById('recycleSection');
+        const aboutSection = document.getElementById('aboutSection');
+        
+        const nicknameGroup = document.getElementById('nicknameGroup');
+        const authForm = document.getElementById('authForm');
+        const authTitle = document.getElementById('authTitle');
+        const authSubtitle = document.getElementById('authSubtitle');
+        const authSubmitBtn = document.getElementById('authSubmitBtn');
+        const toggleAuthModeBtn = document.getElementById('toggleAuthModeBtn');
+        
+        const profileNickname = document.getElementById('profileNickname');
+        const profileEmail = document.getElementById('profileEmail');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const userReportsList = document.getElementById('userReportsList');
+        const noReportsMessage = document.getElementById('noReportsMessage');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        let isSignUpMode = false;
+
+        function getRank(count) {
+            return RANK_TIERS.find(tier => count >= tier.min && count <= tier.max) || RANK_TIERS[RANK_TIERS.length - 1];
+        }
+
+        function updateGamificationUI(reportsCount) {
+            if (reportsCountText) reportsCountText.innerText = `${reportsCount} ${currentLang === 'kz' ? 'шағым жіберілді' : 'жалоб отправлено'}`;
+            const currentTier = getRank(reportsCount);
+            if (profileRankBadge) profileRankBadge.innerText = `${currentTier.nameKey === 'badge1Name' ? '🌱' : currentTier.nameKey === 'badge2Name' ? '🔎' : currentTier.nameKey === 'badge3Name' ? '🌿' : currentTier.nameKey === 'badge4Name' ? '🏙️' : '♻️'} ${t(currentTier.nameKey)}`;
+
+            // Обновляем визуал карточек достижений
+            const badges = [
+                { el: badgeFirst, min: 0 },
+                { el: badgeFive, min: 1 },
+                { el: badgeTen, min: 5 },
+                { el: badgeFifteen, min: 10 },
+                { el: badgeHero, min: 15 }
+            ];
+
+            badges.forEach(b => {
+                if (b.el) {
+                    if (reportsCount >= b.min) {
+                        b.el.classList.remove('opacity-40');
+                        b.el.classList.add('border-emerald-200', 'bg-emerald-50/20');
+                    } else {
+                        b.el.classList.add('opacity-40');
+                        b.el.classList.remove('border-emerald-200', 'bg-emerald-50/20');
+                    }
+                }
+            });
+
+            if (currentTier.nextRankKey) {
+                const nextTierObj = RANK_TIERS.find(t => t.nameKey === currentTier.nextRankKey);
+                const currentMin = currentTier.min;
+                const nextMin = nextTierObj.min;
+                const totalInTier = nextMin - currentMin;
+                const progressInTier = reportsCount - currentMin;
+                const percentage = Math.min((progressInTier / totalInTier) * 100, 100);
+                if (progressFill) progressFill.style.width = `${percentage}%`;
+                const remaining = nextMin - reportsCount;
+                if (nextRankProgressText) {
+                    nextRankProgressText.innerText = currentLang === 'kz' 
+                        ? `"${t(currentTier.nextRankKey)}" атағына жету үшін тағы ${remaining} шағым жіберіңіз.` 
+                        : `До звания "${t(currentTier.nextRankKey)}" осталось отправить ${remaining} жалоб.`;
+                }
             } else {
-                elements.subcategoryContainer.style.display = 'none';
-                elements.otherContainer.style.display = 'none';
+                if (progressFill) progressFill.style.width = "100%";
+                if (nextRankProgressText) {
+                    nextRankProgressText.innerText = currentLang === 'kz' 
+                        ? "Құттықтаймыз! Сіз ең жоғары Эко-батыр атағына ие болдыңыз! 🎉" 
+                        : "Поздравляем! Вы достигли максимального звания Эко-героя! 🎉";
+                }
             }
         }
 
-        elements.categorySelect.addEventListener('change', updateSubcategoryDropdown);
+        function showLevelUpAlert(newRankKey) {
+            if (!levelUpModal) return;
+            const emojiMap = { badge1Name: '🌱', badge2Name: '🔎', badge3Name: '🌿', badge4Name: '🏙️', badge5Name: '♻️' };
+            modalBadge.innerText = emojiMap[newRankKey] || '🎉';
+            modalRankName.innerText = t(newRankKey);
+            levelUpModal.classList.remove('hidden');
+            setTimeout(() => {
+                levelUpModal.classList.remove('opacity-0', 'pointer-events-none');
+                levelUpModal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
 
-        // ИМИТАЦИЯ ИИ ДЛЯ ИЗОБРАЖЕНИЙ
-        elements.photoInput.addEventListener('change', (e) => {
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                levelUpModal.classList.add('opacity-0', 'pointer-events-none');
+                levelUpModal.querySelector('div').classList.add('scale-95');
+                setTimeout(() => levelUpModal.classList.add('hidden'), 300);
+            });
+        }
+
+        async function checkSession() {
+            if (supabaseClient) {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    setCurrentUser(session ? session.user : null);
+                } catch (e) {
+                    loadLocalUser();
+                }
+            } else {
+                loadLocalUser();
+            }
+        }
+
+        function loadLocalUser() {
+            setCurrentUser(JSON.parse(localStorage.getItem('ecomap_mock_user')));
+        }
+
+        function setCurrentUser(user) {
+            currentUser = user;
+            if (user) {
+                const nickname = user.user_metadata?.nickname || user.nickname || user.email.split('@')[0];
+                if (menuAuthBtn) menuAuthBtn.classList.add('hidden');
+                if (menuProfileBtn) menuProfileBtn.classList.remove('hidden');
+                if (menuUsernameText) menuUsernameText.innerText = `@${nickname}`;
+                if (profileNickname) profileNickname.innerText = `@${nickname}`;
+                if (profileEmail) profileEmail.innerText = user.email;
+                if (profileAvatar) profileAvatar.innerText = nickname.charAt(0).toUpperCase();
+                renderUserReports();
+            } else {
+                if (menuAuthBtn) menuAuthBtn.classList.remove('hidden');
+                if (menuProfileBtn) menuProfileBtn.classList.add('hidden');
+            }
+        }
+
+        if (toggleAuthModeBtn) {
+            toggleAuthModeBtn.addEventListener('click', () => {
+                isSignUpMode = !isSignUpMode;
+                if (isSignUpMode) {
+                    authTitle.innerText = t('authTitleReg');
+                    authSubtitle.innerText = t('authSubtitleReg');
+                    nicknameGroup.classList.remove('hidden');
+                    authSubmitBtn.innerText = t('authBtnReg');
+                    toggleAuthModeBtn.innerText = t('authToggleToLogin');
+                } else {
+                    authTitle.innerText = t('authTitleLogin');
+                    authSubtitle.innerText = t('authSubtitleLogin');
+                    nicknameGroup.classList.add('hidden');
+                    authSubmitBtn.innerText = t('authBtnLogin');
+                    toggleAuthModeBtn.innerText = t('authToggleToReg');
+                }
+            });
+        }
+
+        if (authForm) {
+            authForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('authEmail').value.trim();
+                const password = document.getElementById('authPassword').value;
+                const nickname = document.getElementById('authNickname') ? document.getElementById('authNickname').value.trim() : "";
+
+                if (supabaseClient) {
+                    if (isSignUpMode) {
+                        const { error } = await supabaseClient.auth.signUp({ email, password, options: { data: { nickname } } });
+                        if (error) return alert(error.message);
+                        alert(t('alertRegSuccess'));
+                        toggleAuthModeBtn.click();
+                    } else {
+                        const { data, error } = await supabaseClient.signInWithPassword({ email, password });
+                        if (error) return alert(error.message);
+                        setCurrentUser(data.user);
+                        showScreen('main');
+                    }
+                } else {
+                    if (isSignUpMode) {
+                        const mockUser = { email, nickname: nickname || email.split('@')[0], id: "usr_" + Date.now() };
+                        localStorage.setItem('ecomap_mock_user_data', JSON.stringify(mockUser));
+                        localStorage.setItem('ecomap_mock_password', password);
+                        alert(t('alertRegSuccess'));
+                        toggleAuthModeBtn.click();
+                    } else {
+                        const registeredUser = JSON.parse(localStorage.getItem('ecomap_mock_user_data'));
+                        const registeredPass = localStorage.getItem('ecomap_mock_password');
+                        if (registeredUser && registeredUser.email === email && registeredPass === password) {
+                            localStorage.setItem('ecomap_mock_user', JSON.stringify(registeredUser));
+                            setCurrentUser(registeredUser);
+                            showScreen('main');
+                        } else {
+                            alert(currentLang === 'kz' ? "Қате email немесе құпия сөз!" : "Неверный email или пароль!");
+                        }
+                    }
+                }
+                authForm.reset();
+            });
+        }
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                if (supabaseClient) await supabaseClient.auth.signOut();
+                localStorage.removeItem('ecomap_mock_user');
+                setCurrentUser(null);
+                showScreen('main');
+            });
+        }
+
+        async function renderUserReports() {
+            if (!userReportsList) return;
+            userReportsList.innerHTML = "";
+            let userReports = [];
+
+            if (supabaseClient) {
+                const { data } = await supabaseClient.from('reports').select('*').eq('user_id', currentUser.id);
+                if (data) userReports = data;
+            } else {
+                userReports = localReports.filter(r => r.userId === currentUser.id);
+            }
+
+            updateGamificationUI(userReports.length);
+            if (userReports.length === 0) {
+                noReportsMessage.classList.remove('hidden');
+            } else {
+                noReportsMessage.classList.add('hidden');
+                userReports.forEach(r => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-50 p-4 rounded-xl border border-slate-100 flex justify-between items-center";
+                    card.innerHTML = `
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-700">${r.category}</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">${r.desc}</p>
+                        </div>
+                        <span class="inline-block bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-100">
+                            ${r.status || (currentLang === 'kz' ? "🟡 Жіберілді" : "🟡 Отправлена")}
+                        </span>
+                    `;
+                    userReportsList.appendChild(card);
+                });
+            }
+        }
+
+        function openDrawer() {
+            sideDrawer.classList.remove('-translate-x-full');
+            drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeDrawer() {
+            sideDrawer.classList.add('-translate-x-full');
+            drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        logoBtn.addEventListener('click', openDrawer);
+        closeDrawerBtn.addEventListener('click', closeDrawer);
+        drawerOverlay.addEventListener('click', closeDrawer);
+
+        function showScreen(screen) {
+            [mainSection, aboutSection, recycleSection, authSection, profileSection].forEach(s => { if (s) s.classList.add('hidden'); });
+            if (screen === 'main') mainSection.classList.remove('hidden');
+            if (screen === 'about') aboutSection.classList.remove('hidden');
+            if (screen === 'recycle') recycleSection.classList.remove('hidden');
+            if (screen === 'auth') authSection.classList.remove('hidden');
+            if (screen === 'profile') profileSection.classList.remove('hidden');
+            closeDrawer();
+            window.scrollTo(0, 0);
+        }
+
+        menuReportBtn.addEventListener('click', () => showScreen('main'));
+        menuAboutBtn.addEventListener('click', () => showScreen('about'));
+        menuRecycleBtn.addEventListener('click', () => showScreen('recycle'));
+        menuAuthBtn.addEventListener('click', () => showScreen('auth'));
+        menuProfileBtn.addEventListener('click', () => showScreen('profile'));
+
+        let map = L.map('map', { attributionControl: false }).setView([43.238949, 76.945408], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const userReportsGroup = L.layerGroup().addTo(map);
+        const recyclePointsGroup = L.layerGroup().addTo(map);
+        const recycleMarkers = {};
+
+        const recyclePoints = [
+            { id: 1, name: "ECO-Almaty", address: "ул. Байтурсынова, 113", lat: 43.2392, lng: 76.9298 },
+            { id: 2, name: "Пункт сбора батареек", address: "пр. Абая, 44", lat: 43.2412, lng: 76.9192 }
+        ];
+
+        recyclePoints.forEach(point => {
+            const greenIcon = L.divIcon({
+                html: `<div class="w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center border-2 border-white shadow-lg">♻️</div>`,
+                className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+            });
+            const marker = L.marker([point.lat, point.lng], { icon: greenIcon }).addTo(recyclePointsGroup);
+            marker.bindPopup(`<b>${point.name}</b><br>${point.address}`);
+            recycleMarkers[point.id] = marker;
+        });
+
+        // Функция обновления подкатегорий
+        function updateSubcategories(selectedCategory) {
+            const subcategoryContainer = document.getElementById("subcategory-container");
+            const subcategorySelect = document.getElementById("problem-subcategory");
+            const otherContainer = document.getElementById("other-problem-container");
+            const otherInput = document.getElementById("problem-custom-text");
+
+            const currentSubcats = subcategoriesData[currentLang][selectedCategory];
+
+            subcategorySelect.innerHTML = `<option value="" disabled selected>${t('subcatDefault')}</option>`;
+            otherInput.value = "";
+
+            if (selectedCategory === "other") {
+                subcategoryContainer.style.display = "none";
+                subcategorySelect.removeAttribute("required");
+                otherContainer.style.display = "block";
+                otherInput.setAttribute("required", "true");
+            } else if (currentSubcats) {
+                otherContainer.style.display = "none";
+                otherInput.removeAttribute("required");
+
+                currentSubcats.forEach(subcat => {
+                    const option = document.createElement("option");
+                    option.value = subcat;
+                    option.textContent = subcat;
+                    subcategorySelect.appendChild(option);
+                });
+
+                subcategoryContainer.style.display = "block";
+                subcategorySelect.setAttribute("required", "true");
+            } else {
+                subcategoryContainer.style.display = "none";
+                otherContainer.style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const categorySelect = document.getElementById("problem-category");
+            categorySelect.addEventListener("change", function () {
+                updateSubcategories(this.value);
+            });
+            applyLanguage();
+            checkSession();
+        });
+
+        const photoInput = document.getElementById('photoInput');
+        const uploadText = document.getElementById('uploadText');
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const aiScanner = document.getElementById('aiScanner');
+        const aiStatusBg = document.getElementById('aiStatusBg');
+        const aiStatusText = document.getElementById('aiStatusText');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        let selectedPhotoUrl = null;
+        let isAiVerified = false;
+        let tempCoords = null;
+        let tempMarker = null;
+
+        photoInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    elements.imagePreview.src = event.target.result;
-                    elements.previewContainer.classList.remove('hidden');
-                    elements.aiScanner.classList.remove('hidden');
-                    elements.aiStatusBg.className = "absolute inset-0 bg-white/70 backdrop-blur-[1px] flex items-center justify-center";
-                    elements.aiStatusText.innerText = translations[currentLang].aiAnalyzing;
+                selectedPhotoUrl = URL.createObjectURL(file);
+                imagePreview.src = selectedPhotoUrl;
+                previewContainer.classList.remove('hidden');
+                aiScanner.classList.remove('hidden');
+                aiStatusBg.className = "absolute inset-0 bg-white/80 backdrop-blur-[1px] flex items-center justify-center";
+                aiStatusText.innerText = t('aiAnalyzing');
+                submitBtn.disabled = true;
 
-                    setTimeout(() => {
-                        elements.aiScanner.classList.add('hidden');
-                        elements.aiStatusBg.className = "absolute bottom-2 right-2 bg-transparent";
-                        elements.aiStatusText.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm";
-                        elements.aiStatusText.innerText = translations[currentLang].aiVerified;
-                    }, 1800);
-                };
-                reader.readAsDataURL(file);
+                setTimeout(() => {
+                    isAiVerified = true; 
+                    aiScanner.classList.add('hidden');
+                    aiStatusBg.className = "absolute top-1.5 left-1.5 flex items-center justify-center";
+                    aiStatusText.innerText = t('aiVerified');
+                    aiStatusText.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500 text-white";
+                    uploadText.innerText = t('uploadSuccess');
+                    submitBtn.disabled = false;
+                }, 1800);
             }
         });
 
-        // АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ
-        let isRegistration = false;
-        elements.toggleAuthModeBtn.addEventListener('click', () => {
-            isRegistration = !isRegistration;
-            if (isRegistration) {
-                elements.authTitle.innerText = translations[currentLang].authTitleReg;
-                elements.authSubtitle.innerText = translations[currentLang].authSubtitleReg;
-                elements.nicknameGroup.classList.remove('hidden');
-                elements.authSubmitBtn.innerText = translations[currentLang].authBtnReg;
-                elements.toggleAuthModeBtn.innerText = translations[currentLang].authToggleToLogin;
-            } else {
-                elements.authTitle.innerText = translations[currentLang].authTitleLogin;
-                elements.authSubtitle.innerText = translations[currentLang].authSubtitleLogin;
-                elements.nicknameGroup.classList.add('hidden');
-                elements.authSubmitBtn.innerText = translations[currentLang].authBtnLogin;
-                elements.toggleAuthModeBtn.innerText = translations[currentLang].authToggleToReg;
-            }
-        });
-
-        elements.authForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = elements.authEmail.value;
-            const nickname = elements.authNickname.value || email.split('@')[0];
-            
-            currentUser = { email, nickname, reportsCount: 0 };
-            updateUserUI();
-            showSection(elements.mainSection);
-        });
-
-        elements.logoutBtn.addEventListener('click', () => {
-            currentUser = null;
-            updateUserUI();
-            showSection(elements.mainSection);
-        });
-
-        function updateUserUI() {
-            if (currentUser) {
-                elements.menuAuthBtn.classList.add('hidden');
-                elements.menuProfileBtn.classList.remove('hidden');
-                elements.menuUsernameText.innerText = currentUser.nickname;
-                document.getElementById('profileNickname').innerText = '@' + currentUser.nickname;
-                document.getElementById('profileEmail').innerText = currentUser.email;
-                document.getElementById('profileAvatar').innerText = currentUser.nickname.charAt(0).toUpperCase();
-            } else {
-                elements.menuAuthBtn.classList.remove('hidden');
-                elements.menuProfileBtn.classList.add('hidden');
-            }
-        }
-
-        // ОТПРАВКА ФОРМЫ
-        elements.ecoForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!currentUser) {
-                alert(currentLang === 'ru' ? 'Пожалуйста, войдите в аккаунт для отправки жалобы.' : 'Шағым жіберу үшін жүйеге кіріңіз.');
-                showSection(elements.authSection);
-                return;
-            }
-            if (!selectedLocation) {
-                alert(currentLang === 'ru' ? 'Пожалуйста, выберите точку на карте.' : 'Картадан нүктені таңдаңыз.');
-                return;
-            }
-
-            currentUser.reportsCount++;
-            document.getElementById('reportsCountText').innerText = `${currentUser.reportsCount} ${currentLang === 'ru' ? 'жалоб отправлено' : 'шағым жіберілді'}`;
-
-            L.marker(selectedLocation).addTo(map)
-                .bindPopup(`<b>${elements.categorySelect.value}</b><br>${document.getElementById('description').value}`)
-                .openPopup();
-
-            alert(currentLang === 'ru' ? 'Обращение успешно отправлено!' : 'Өтініш сәтті жіберілді!');
-            elements.ecoForm.reset();
-            elements.previewContainer.classList.add('hidden');
+        map.on('click', function(e) {
+            tempCoords = [e.latlng.lat, e.latlng.lng];
             if (tempMarker) map.removeLayer(tempMarker);
+            tempMarker = L.marker(tempCoords).addTo(map);
+        });
 
-            if (currentUser.reportsCount === 1) {
-                elements.levelUpModal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
-                elements.levelUpModal.classList.add('opacity-100');
+        const ecoForm = document.getElementById('ecoForm');
+        ecoForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                alert(t('alertLoginFirst'));
+                showScreen('auth');
+                return;
+            }
+
+            const categoryVal = document.getElementById('problem-category').value;
+            const subcategoryVal = document.getElementById('problem-subcategory').value;
+            const customVal = document.getElementById('problem-custom-text').value;
+            const description = document.getElementById('description').value;
+
+            let finalCategoryName = categoryVal;
+            if (categoryVal === 'other') {
+                finalCategoryName = "🌱 " + (currentLang === 'kz' ? "Басқа: " : "Другое: ") + customVal;
+            } else if (subcategoryVal) {
+                finalCategoryName = subcategoryVal;
+            }
+
+            if (!tempCoords) {
+                alert(t('alertSelectPoint'));
+                return;
+            }
+
+            if (!isAiVerified) {
+                alert(t('alertAiWait'));
+                return;
+            }
+
+            let currentReportsCount = 0;
+            if (supabaseClient) {
+                const { data } = await supabaseClient.from('reports').select('id').eq('user_id', currentUser.id);
+                currentReportsCount = data ? data.length : 0;
+            } else {
+                currentReportsCount = localReports.filter(r => r.userId === currentUser.id).length;
+            }
+
+            const oldTier = getRank(currentReportsCount);
+
+            const newReport = {
+                id: "rep_" + Date.now(),
+                userId: currentUser.id,
+                coords: tempCoords,
+                category: finalCategoryName,
+                desc: description,
+                status: currentLang === 'kz' ? "🟡 Қабылданды" : "🟡 Получено",
+                photoUrl: selectedPhotoUrl,
+                created_at: new Date().toISOString()
+            };
+
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.from('reports').insert([{
+                        user_id: currentUser.id,
+                        category: finalCategoryName,
+                        desc: description,
+                        lat: tempCoords[0],
+                        lng: tempCoords[1],
+                        status: currentLang === 'kz' ? "🟡 Қабылданды" : "🟡 Получено",
+                        photo_url: selectedPhotoUrl
+                    }]);
+                } catch (err) {
+                    console.error(err);
+                }
+            } else {
+                localReports.push(newReport);
+                localStorage.setItem('ecomap_reports', JSON.stringify(localReports));
+            }
+
+            const redIcon = L.divIcon({
+                html: `<div class="w-7 h-7 bg-rose-500 text-white rounded-full flex items-center justify-center border-2 border-white shadow-lg animate-bounce">⚠️</div>`,
+                className: '', iconSize: [28, 28], iconAnchor: [14, 14]
+            });
+            L.marker(tempCoords, { icon: redIcon }).addTo(userReportsGroup).bindPopup(`<b>${finalCategoryName}</b><br>${description}`);
+
+            if (tempMarker) map.removeLayer(tempMarker);
+            ecoForm.reset();
+            previewContainer.classList.add('hidden');
+            uploadText.innerText = t('uploadText');
+            document.getElementById('subcategory-container').style.display = "none";
+            document.getElementById('other-problem-container').style.display = "none";
+            tempCoords = null;
+            selectedPhotoUrl = null;
+            isAiVerified = false;
+
+            await renderUserReports();
+
+            const newTier = getRank(currentReportsCount + 1);
+            if (newTier.nameKey !== oldTier.nameKey) {
+                showLevelUpAlert(newTier.nameKey);
+            } else {
+                alert(t('alertSuccessReport'));
             }
         });
-
-        elements.closeModalBtn.addEventListener('click', () => {
-            elements.levelUpModal.classList.add('hidden', 'opacity-0', 'pointer-events-none');
-        });
-
-        // ПУНКТЫ ПЕРЕРАБОТКИ
-        function renderRecyclePoints() {
-            elements.recycleList.innerHTML = recyclePointsData.map(pt => `
-                <div class="bg-slate-50 border border-slate-100 p-4 rounded-xl">
-                    <h3 class="font-bold text-slate-800 text-sm mb-1">${pt.name}</h3>
-                    <p class="text-xs text-slate-500 mb-3">📍 ${pt.address}</p>
-                    <div class="flex flex-wrap gap-1.5">
-                        ${pt.types.map(t => `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-semibold px-2 py-0.5 rounded-full">${t}</span>`).join('')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        renderRecyclePoints();
     </script>
 </body>
 </html>
