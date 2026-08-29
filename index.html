@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = 'https://xfmmdtgikvwumzmrxfao.supabase.co/rest/v1/';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbW1kdGdpa3Z3dW16bXJ4ZmFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTUxMTUsImV4cCI6MjEwMzU5MTExNX0.POHcS1cw8wq6JEs4gYmlDRrqooS1G5JMGe28-MV3Up8';
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -1216,8 +1222,6 @@
                 alert(t('alertSuccessReport'));
             }
         });
-    </script>
-<!-- Библиотека Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</script>
 </body>
 </html>
