@@ -799,12 +799,12 @@
             applyLanguage();
         });
 
-        const SUPABASE_URL = "https://your-project-id.supabase.co"; 
-        const SUPABASE_ANON_KEY = "your-anon-key";
+        const SUPABASE_URL = "https://xfmmdtgikvwumzmrxfao.supabase.co/rest/v1/"; 
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbW1kdGdpa3Z3dW16bXJ4ZmFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMTUxMTUsImV4cCI6MjEwMzU5MTExNX0.POHcS1cw8wq6JEs4gYmlDRrqooS1G5JMGe28-MV3Up8";
         
         let supabaseClient = null;
         try {
-            if (typeof supabase !== 'undefined' && SUPABASE_URL !== "https://your-project-id.supabase.co" && SUPABASE_URL !== "") {
+            if (typeof supabase !== 'undefined' && SUPABASE_URL !== "https://xfmmdtgikvwumzmrxfao.supabase.co/rest/v1/" && SUPABASE_URL !== "") {
                 supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
         } catch (error) {
