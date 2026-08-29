@@ -74,6 +74,22 @@
         </div>
     </div>
 
+    <!-- МОДАЛКА ПРЕДУПРЕЖДЕНИЯ (ОТСУТСТВИЕ ФОТОГРАФИИ) -->
+    <div id="noPhotoModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full border border-slate-100 shadow-2xl text-center transform scale-95 transition-transform duration-300">
+            <div class="w-14 h-14 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 border border-amber-100 shadow-sm">
+                📸
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2" data-i18n="noPhotoTitle">Требуется фотография</h3>
+            <p class="text-xs text-slate-600 leading-relaxed mb-6" data-i18n="noPhotoMessage">
+                Сначала загрузите файл или фото, чтобы отправить обращение.
+            </p>
+            <button id="closeNoPhotoModalBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-md">
+                Понятно
+            </button>
+        </div>
+    </div>
+
     <!-- Шапка сайта -->
     <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 md:px-6 sticky top-0 z-[2000]">
         <button id="logoBtn" class="flex items-center gap-2 hover:opacity-80 transition-all focus:outline-none group">
@@ -160,7 +176,7 @@
                 <a href="https://www.instagram.com/ecomapkz?utm_source=qr" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-500 via-red-500 to-purple-600 flex items-center justify-center text-white shadow-sm hover:scale-110 transition-all duration-300" aria-label="Instagram">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                 </a>
-                <!-- Telegram (Исправленная оригинальная иконка) -->
+                <!-- Telegram -->
                 <a href="https://t.me/Ecomapkz" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-sm" aria-label="Telegram">
                     <svg class="w-10 h-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="12" cy="12" r="12" fill="#2AABEE"/>
@@ -193,7 +209,7 @@
                     <p class="text-xs text-slate-400 mt-1" data-i18n="formSubtitle">Выберите точку на карте, заполните форму. Требуется авторизация.</p>
                 </div>
 
-                <form id="ecoForm" class="flex flex-col gap-4">
+                <form id="ecoForm" class="flex flex-col gap-4" novalidate>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5" data-i18n="labelCategory">Основная категория</label>
                         <select id="problem-category" name="category" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 text-xs focus:outline-none focus:border-emerald-500" required>
@@ -233,7 +249,7 @@
                                 <span class="text-lg mb-0.5">📷</span>
                                 <p class="text-[10px] font-medium text-slate-400" id="uploadText" data-i18n="uploadText">Выбрать файл фото</p>
                             </div>
-                            <input type="file" id="photoInput" accept="image/*" class="hidden" required />
+                            <input type="file" id="photoInput" accept="image/*" class="hidden" />
                         </label>
                         
                         <div id="previewContainer" class="hidden mt-3 relative overflow-hidden rounded-lg border border-slate-200">
@@ -401,8 +417,8 @@
                 <p data-i18n="aboutText3">
                     Наша деятельность направлена на повышение экологической осведомлённости населения, развитие гражданской ответственности и формирование единого информационного пространства, в котором жители могут участвовать в улучшении окружающей среды.
                 </p>
-                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-900 font-medium mt-6">
-                    <strong>EcoMap KZ</strong> - это инструмент взаимодействия людей, технологий и городской среды для создания более чистых и устойчивых городов Казахстана.
+                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-900 font-medium mt-6" data-i18n="aboutBoxText">
+                    EcoMap KZ - платформа, которая превращает наблюдение жителей за городом в данные о состоянии городской среды.
                 </div>
             </div>
         </div>
@@ -613,10 +629,13 @@
                 aboutText1: "EcoMap KZ - это цифровая экологическая платформа, созданная для мониторинга состояния городской среды и вовлечения жителей в решение экологических проблем.",
                 aboutText2: "Мы предоставляем возможность фиксировать проблемы на интерактивной карте, добавлять фотографии и описания, отслеживать экологическое состояние районов и находить пункты переработки отходов.",
                 aboutText3: "Наша деятельность направлена на повышение экологической осведомлённости населения, развитие гражданской ответственности и формирование единого информационного пространства, в котором жители могут участвовать в улучшении окружающей среды.",
+                aboutBoxText: "EcoMap KZ - платформа, которая превращает наблюдение жителей за городом в данные о состоянии городской среды.",
                 recycleHeader: "Пункты приема и переработки отходов",
                 modalNewRankTitle: "Новое звание! 🎉",
                 modalNewRankSubtitle: "Ваш вклад делает Казахстан чище. Поздравляем с достижением уровня:",
                 modalContinueBtn: "Ура, продолжить!",
+                noPhotoTitle: "Требуется фотография",
+                noPhotoMessage: "Сначала загрузите файл или фото, чтобы отправить обращение.",
                 alertLoginFirst: "Пожалуйста, сначала войдите в свой аккаунт!",
                 alertSelectPoint: "Пожалуйста, выберите точку на карте!",
                 alertAiWait: "Дождитесь окончания проверки ИИ!",
@@ -696,10 +715,13 @@
                 aboutText1: "EcoMap KZ - бұл қалалық ортаның жағдайын мониторингтеуге және тұрғындарды экологиялық мәселелерді шешуге тартуға арналған сандық экологиялық платформа.",
                 aboutText2: "Біз интерактивті картада мәселелерді тіркеуге, фотосуреттер мен сипаттамаларды қосуға, аудандардың экологиялық жағдайын бақылауға және қалдықтарды қайта өңдеу пункттерін табуға мүмкіндік береміз.",
                 aboutText3: "Біздің қызметіміз халықтың экологиялық хабардарлығын арттыруға, азаматтық жауапкершілікті дамытуға бағытталған.",
+                aboutBoxText: "EcoMap KZ - платформа, которая превращает наблюдение жителей за городом в данные о состоянии городской среды.",
                 recycleHeader: "Қалдықтарды қабылдау және қайта өңдеу пункттері",
                 modalNewRankTitle: "Жаңа атақ! 🎉",
                 modalNewRankSubtitle: "Сіздің үлесіңіз Қазақстанды таза етеді. Келесі деңгейге жетуіңізбен құттықтаймыз:",
                 modalContinueBtn: "Жалғастыру!",
+                noPhotoTitle: "Сурет қажет",
+                noPhotoMessage: "Өтінішті жіберу үшін алдымен файлды немесе фотосуретті жүктеңіз.",
                 alertLoginFirst: "Алдымен аккаунтыңызға кіріңіз!",
                 alertSelectPoint: "Картадан нүкте таңдаңыз!",
                 alertAiWait: "ЖИ тексеруі аяқталғанын күтіңіз!",
@@ -809,6 +831,9 @@
         const progressFill = document.getElementById('progressFill');
         const nextRankProgressText = document.getElementById('nextRankProgressText');
         
+        const noPhotoModal = document.getElementById('noPhotoModal');
+        const closeNoPhotoModalBtn = document.getElementById('closeNoPhotoModalBtn');
+
         const badgeFirst = document.getElementById('badge-first');
         const badgeFive = document.getElementById('badge-five');
         const badgeTen = document.getElementById('badge-ten');
@@ -918,6 +943,24 @@
                 levelUpModal.classList.add('opacity-0', 'pointer-events-none');
                 levelUpModal.querySelector('div').classList.add('scale-95');
                 setTimeout(() => levelUpModal.classList.add('hidden'), 300);
+            });
+        }
+
+        // Функции модалки отсутствия фото
+        function showNoPhotoModal() {
+            if (!noPhotoModal) return;
+            noPhotoModal.classList.remove('hidden');
+            setTimeout(() => {
+                noPhotoModal.classList.remove('opacity-0', 'pointer-events-none');
+                noPhotoModal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        if (closeNoPhotoModalBtn) {
+            closeNoPhotoModalBtn.addEventListener('click', () => {
+                noPhotoModal.classList.add('opacity-0', 'pointer-events-none');
+                noPhotoModal.querySelector('div').classList.add('scale-95');
+                setTimeout(() => noPhotoModal.classList.add('hidden'), 300);
             });
         }
 
@@ -1247,6 +1290,13 @@
         ecoForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // ПРОВЕРКА 1: Отправка без фотографии
+            if (!photoInput.files || photoInput.files.length === 0) {
+                showNoPhotoModal();
+                return;
+            }
+
+            // ПРОВЕРКА 2: Авторизация
             if (!currentUser) {
                 alert(t('alertLoginFirst'));
                 showScreen('auth');
